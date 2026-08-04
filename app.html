@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#102a1f" />
+<title>GreenLoop — Smart City & Rewards OS</title>
+<style>
+:root{
+  --forest-950:#081a13;
+  --forest-900:#0d241a;
+  --forest-850:#102a1f;
+  --forest-800:#153426;
+  --forest-700:#1c4432;
+  --glass:rgba(33,64,49,.58);
+  --glass-strong:rgba(39,72,56,.82);
+  --glass-soft:rgba(255,255,255,.055);
+  --line:rgba(222,255,218,.16);
+  --line-strong:rgba(222,255,218,.28);
+  --lime:#d8f99b;
+  --lime-2:#b8e67f;
+  --mint:#8ee0ae;
+  --text:#f3f7f1;
+  --muted:#b9c7bd;
+  --dim:#83958a;
+  --danger:#ff9a91;
+  --warn:#f5d58d;
+  --blue:#8bc8db;
+  --shadow:0 18px 48px rgba(0,0,0,.32);
+  --radius:24px;
+  --radius-sm:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:
+    radial-gradient(90% 65% at 0% 0%,rgba(143,201,158,.20),transparent 55%),
+    radial-gradient(90% 70% at 100% 100%,rgba(190,239,143,.10),transparent 60%),
+    #6e8174;
+  color:var(--text);
+  overflow:hidden;
+}
+button,input,select{font:inherit}
+button{color:inherit}
+.app-shell{
+  width:100%;height:100%;max-width:460px;margin:0 auto;position:relative;overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.02),transparent 24%),
+    radial-gradient(100% 55% at 50% -5%,rgba(144,203,158,.18),transparent 58%),
+    linear-gradient(180deg,#10291f 0%,#0c2118 44%,#081a13 100%);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 24px 80px rgba(0,0,0,.45);
+}
+.app-shell:before,.app-shell:after{
+  content:"";position:absolute;border-radius:55% 0 55% 0;filter:blur(1px);opacity:.16;pointer-events:none;z-index:0;
+}
+.app-shell:before{width:250px;height:420px;left:-115px;top:120px;transform:rotate(-20deg);background:linear-gradient(140deg,#b5d6ad,#183e2d)}
+.app-shell:after{width:210px;height:360px;right:-90px;bottom:75px;transform:rotate(24deg);background:linear-gradient(140deg,#bddf9a,#1b4834)}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;z-index:2}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;padding:0 16px calc(94px + env(safe-area-inset-bottom));scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.glass{
+  background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));
+  border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),var(--shadow);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top)) 18px 8px;position:relative;z-index:4;
+}
+.icon-btn{width:42px;height:42px;border-radius:15px;border:1px solid var(--line);background:rgba(255,255,255,.05);display:grid;place-items:center;cursor:pointer;position:relative}
+.icon-btn:active{transform:scale(.96)}
+.brand{text-align:center;line-height:1;flex:1;min-width:0}
+.brand b{font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:600;letter-spacing:.2px}
+.brand small{display:block;color:var(--lime);font-size:8px;letter-spacing:2px;margin-top:5px;text-transform:uppercase}
+.badge-dot{position:absolute;right:5px;top:5px;min-width:16px;height:16px;padding:0 4px;border-radius:9px;background:var(--lime);color:#17331f;font-weight:800;font-size:9px;display:grid;place-items:center;border:2px solid #163326}
+.statusbar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 4px;font-size:12px;font-weight:700;position:relative;z-index:3}
+.status-icons{display:flex;gap:6px;align-items:center;color:#eaf2ea}
+.splash{padding:calc(30px + env(safe-area-inset-top)) 28px calc(28px + env(safe-area-inset-bottom));justify-content:center;align-items:center;text-align:center;background:
+  radial-gradient(circle at 60% 12%,rgba(238,255,232,.18),transparent 18%),
+  radial-gradient(circle at 35% 70%,rgba(184,230,127,.16),transparent 25%),
+  linear-gradient(180deg,#143629,#0a2017 70%,#081a13);
+}
+.splash-leaf{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.leaf{position:absolute;width:230px;height:420px;border-radius:70% 0 70% 0;background:linear-gradient(150deg,rgba(208,244,173,.30),rgba(21,74,48,.05));border:1px solid rgba(218,255,199,.14);filter:blur(.2px)}
+.leaf.l1{left:-90px;bottom:-95px;transform:rotate(-18deg)}
+.leaf.l2{right:-110px;top:165px;transform:rotate(24deg)}
+.leaf.l3{right:-60px;bottom:-170px;transform:rotate(-12deg);opacity:.48}
+.splash-card{width:100%;max-width:330px;border-radius:34px;padding:54px 28px 28px;position:relative;z-index:2}
+.logo-mark{width:70px;height:70px;margin:0 auto 18px;display:grid;place-items:center}
+.logo-mark svg{width:62px;height:62px;stroke:var(--lime);fill:none;stroke-width:1.8}
+.splash h1{font-family:Georgia,'Times New Roman',serif;font-size:44px;margin:0 0 10px;font-weight:600}
+.splash h2{font-size:15px;color:var(--lime);margin:0 0 28px;font-weight:600}
+.splash p{color:#d7e0d8;line-height:1.65;font-size:14px;margin:0 0 34px}
+.primary-btn{width:100%;border:0;border-radius:999px;padding:16px 20px;background:linear-gradient(135deg,#e0f9a7,#b8df7e);color:#18351f;font-weight:800;box-shadow:0 12px 30px rgba(190,232,132,.22);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
+.primary-btn:active{transform:translateY(1px) scale(.99)}
+.secondary-btn{border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:16px;padding:12px 14px;cursor:pointer;font-weight:700}
+.secondary-btn:active{transform:scale(.98)}
+.page-title{font-family:Georgia,'Times New Roman',serif;font-size:29px;margin:8px 0 2px}
+.page-sub{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.hero{border-radius:28px;padding:22px;min-height:190px;position:relative;overflow:hidden;margin:10px 0 16px}
+.hero:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-24px;top:18px;background:radial-gradient(circle at 35% 35%,rgba(230,255,215,.58),rgba(88,141,88,.18) 55%,transparent 70%);box-shadow:0 0 55px rgba(194,237,159,.12)}
+.hero-city{position:absolute;right:8px;bottom:4px;width:165px;height:130px;opacity:.95;z-index:1}
+.hero-copy{position:relative;z-index:2;max-width:55%}
+.hero h2{font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.02;margin:0 0 12px}
+.hero p{font-size:12px;line-height:1.5;color:#d4dfd7;margin:0 0 18px}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:var(--lime);color:#18351f;font-size:10px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{border-radius:18px;padding:14px 10px;text-align:center}
+.stat b{display:block;font-size:20px;font-family:Georgia,'Times New Roman',serif;color:var(--lime)}
+.stat span{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--dim)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 10px}
+.section-head h3{margin:0;font-size:15px}.section-head button{border:0;background:none;color:var(--lime);font-size:11px;cursor:pointer}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:8px}
+.quick{border-radius:18px;min-height:78px;border:1px solid var(--line);background:rgba(255,255,255,.045);padding:10px 5px;text-align:center;cursor:pointer}
+.quick .qi{width:34px;height:34px;margin:0 auto 7px;border-radius:12px;display:grid;place-items:center;background:rgba(216,249,155,.09);color:var(--lime);font-size:18px}
+.quick span{font-size:9px;color:#dce4de}.quick:active{transform:scale(.97)}
+.route-card,.challenge-card,.reward-card,.activity-card,.profile-card,.city-card{border-radius:22px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden}
+.route-title{font-size:14px;font-weight:800;margin-bottom:7px}.route-meta{display:flex;flex-wrap:wrap;gap:7px;color:var(--muted);font-size:10px}
+.pill{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.055);border:1px solid var(--line);font-size:9px;color:#dbe4dc}
+.pill.green{background:rgba(216,249,155,.13);color:var(--lime);border-color:rgba(216,249,155,.25)}
+.progress{height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--mint),var(--lime));border-radius:99px;transition:width .35s}
+.bottom-nav{position:absolute;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));height:72px;border-radius:24px;display:flex;overflow-x:auto;z-index:20;padding:7px;background:rgba(25,54,41,.88);scrollbar-width:none}.bottom-nav::-webkit-scrollbar{display:none}
+.nav-btn{border:0;background:none;border-radius:17px;color:#92a59a;display:flex;flex:0 0 64px;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:7.5px;cursor:pointer;position:relative}
+.nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+.nav-btn.active{color:var(--lime);background:rgba(216,249,155,.12);box-shadow:inset 0 0 0 1px rgba(216,249,155,.08)}
+.form-card{border-radius:24px;padding:15px;margin:10px 0 14px}
+.field{display:flex;align-items:center;gap:10px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid var(--line);padding:12px;margin-bottom:9px}
+.field .dot{width:10px;height:10px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(216,249,155,.09)}
+.field .dot.dest{background:var(--mint)}
+.field input,.field select{flex:1;border:0;outline:0;background:transparent;color:var(--text);min-width:0;font-size:13px}
+.field input::placeholder{color:#87988c}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:1px 0 8px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);font-size:10px;color:var(--muted);cursor:pointer}
+.chip.active{color:#19351f;background:var(--lime);font-weight:800;border-color:transparent}
+.map-card{height:225px;border-radius:25px;position:relative;overflow:hidden;margin-bottom:14px;background:linear-gradient(135deg,#d8e3d9,#a4b7aa)}
+.map-grid{position:absolute;inset:0;opacity:.55;background-image:linear-gradient(rgba(24,66,45,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(24,66,45,.18) 1px,transparent 1px);background-size:28px 28px;transform:rotate(-7deg) scale(1.2)}
+.map-road{position:absolute;height:16px;background:rgba(245,248,241,.72);border-radius:20px;box-shadow:0 0 0 1px rgba(39,77,55,.08)}
+.map-road.r1{width:330px;left:-30px;top:95px;transform:rotate(18deg)}.map-road.r2{width:280px;left:70px;top:130px;transform:rotate(-30deg)}.map-road.r3{width:220px;left:10px;top:40px;transform:rotate(-14deg)}
+.map-zone{position:absolute;border-radius:50%;filter:blur(10px);opacity:.42}.map-zone.z1{width:110px;height:110px;background:#9bea94;left:34px;top:70px}.map-zone.z2{width:90px;height:90px;background:#f6d28c;right:35px;top:42px}.map-zone.z3{width:80px;height:80px;background:#78bed0;right:85px;bottom:10px}
+.route-line{position:absolute;height:6px;border-radius:99px;background:var(--lime);transform-origin:left center;box-shadow:0 0 0 3px rgba(216,249,155,.25),0 0 18px rgba(125,188,91,.45);z-index:5}
+.route-line.a{width:190px;left:72px;top:148px;transform:rotate(-28deg)}.route-line.b{width:94px;left:232px;top:59px;transform:rotate(37deg)}
+.pin{position:absolute;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#173d2b;border:4px solid #eff9e9;z-index:6;box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.pin:after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--lime);left:6px;top:6px}.pin.p1{left:58px;bottom:46px}.pin.p2{right:52px;top:42px}
+.map-label{position:absolute;left:14px;top:14px;padding:8px 10px;border-radius:12px;background:rgba(17,46,33,.82);font-size:10px;z-index:8}
+.route-option{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-radius:20px;padding:14px;margin-bottom:10px;cursor:pointer}
+.route-option.active{border-color:rgba(216,249,155,.48);box-shadow:inset 0 0 0 1px rgba(216,249,155,.16),var(--shadow)}
+.route-icon{width:44px;height:44px;border-radius:15px;background:rgba(216,249,155,.11);display:grid;place-items:center;color:var(--lime);font-size:20px}
+.route-option h4{margin:0 0 4px;font-size:13px}.route-option p{margin:0;color:var(--muted);font-size:10px}.route-score{text-align:right}.route-score b{display:block;color:var(--lime);font-family:Georgia,'Times New Roman',serif;font-size:20px}.route-score span{font-size:8px;color:var(--dim)}
+.card-actions{display:flex;gap:8px;margin-top:12px}.card-actions button{flex:1}
+.activity-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.activity-card{text-align:left;border:0;color:var(--text);cursor:pointer}.activity-card .act-icon{font-size:24px}.activity-card b{display:block;margin:8px 0 4px}.activity-card small{color:var(--muted)}
+.challenge-card h4,.reward-card h4{margin:0 0 5px}.challenge-card p,.reward-card p{font-size:11px;color:var(--muted);margin:0 0 12px;line-height:1.45}
+.challenge-meta{display:flex;justify-content:space-between;font-size:10px;margin:9px 0 7px}.challenge-meta span:last-child{color:var(--lime)}
+.reward-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reward-card{margin:0;min-height:170px;display:flex;flex-direction:column}.reward-art{height:72px;border-radius:17px;background:radial-gradient(circle at 70% 30%,rgba(230,255,212,.7),transparent 30%),linear-gradient(135deg,#638a69,#1d4a35);display:grid;place-items:center;font-size:35px;margin-bottom:10px}.reward-card .cost{margin-top:auto;display:flex;align-items:center;justify-content:space-between}.cost b{color:var(--lime)}
+.wallet-hero{border-radius:28px;padding:22px;margin:8px 0 14px;position:relative;overflow:hidden}.wallet-hero .balance{font-family:Georgia,'Times New Roman',serif;font-size:42px;color:var(--lime)}.wallet-hero small{color:var(--muted)}
+.transactions .row{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}.transactions .row:last-child{border:0}.tx-icon{width:38px;height:38px;border-radius:13px;background:rgba(216,249,155,.09);display:grid;place-items:center}.tx-copy{flex:1}.tx-copy b{display:block;font-size:12px}.tx-copy span{font-size:9px;color:var(--dim)}.tx-points{color:var(--lime);font-weight:800;font-size:12px}.tx-points.minus{color:var(--warn)}
+.profile-hero{text-align:center;padding:22px;border-radius:28px;margin:8px 0 14px}.avatar{width:82px;height:82px;border-radius:28px;margin:0 auto 12px;background:linear-gradient(145deg,#d8f99b,#4c7f5c);display:grid;place-items:center;color:#17351f;font-size:28px;font-family:Georgia,'Times New Roman',serif;font-weight:700;box-shadow:0 12px 30px rgba(154,205,114,.22)}
+.level-row{display:flex;justify-content:center;gap:8px;margin:9px 0}.level-row span{padding:6px 9px;border-radius:999px;background:rgba(216,249,155,.10);color:var(--lime);font-size:9px}
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.badge-card{border-radius:17px;padding:11px 4px;text-align:center;background:rgba(255,255,255,.045);border:1px solid var(--line)}.badge-card b{display:block;font-size:20px}.badge-card span{font-size:8px;color:var(--muted)}
+.menu-list{margin-top:12px}.menu-row{width:100%;display:flex;align-items:center;gap:12px;padding:15px;border:0;border-bottom:1px solid rgba(255,255,255,.07);background:none;color:var(--text);cursor:pointer;text-align:left}.menu-row:last-child{border:0}.menu-row .micon{width:38px;height:38px;border-radius:13px;background:rgba(216,249,155,.08);display:grid;place-items:center}.menu-row .mcopy{flex:1}.menu-row b{display:block;font-size:12px}.menu-row small{color:var(--dim)}
+.side-menu{position:absolute;inset:0;z-index:80;background:rgba(3,14,9,.70);backdrop-filter:blur(10px);display:none}.side-menu.show{display:block}.side-panel{width:82%;height:100%;padding:calc(24px + env(safe-area-inset-top)) 18px;background:linear-gradient(180deg,#173b2c,#0c2118);border-right:1px solid var(--line);box-shadow:24px 0 60px rgba(0,0,0,.35)}
+.side-logo{font-family:Georgia,'Times New Roman',serif;font-size:27px;margin:12px 0 28px}.side-link{width:100%;padding:14px;border-radius:16px;border:0;background:none;color:var(--text);display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left;margin-bottom:6px}.side-link:hover,.side-link.active{background:rgba(216,249,155,.10);color:var(--lime)}
+.modal-bg{position:absolute;inset:0;background:rgba(3,12,8,.72);backdrop-filter:blur(9px);z-index:100;display:none;align-items:flex-end}.modal-bg.show{display:flex}.modal{width:100%;max-height:88%;overflow-y:auto;background:linear-gradient(180deg,#1a412f,#0d261b);border-radius:30px 30px 0 0;border:1px solid var(--line);padding:15px 18px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -22px 60px rgba(0,0,0,.4)}
+.grab{width:42px;height:4px;border-radius:99px;background:rgba(255,255,255,.25);margin:0 auto 16px}.modal h3{font-family:Georgia,'Times New Roman',serif;font-size:24px;margin:0 0 6px}.modal p{font-size:12px;color:var(--muted)}
+.toast{position:absolute;left:50%;bottom:100px;transform:translate(-50%,20px);max-width:86%;padding:11px 15px;border-radius:14px;background:rgba(21,52,38,.96);border:1px solid var(--line-strong);font-size:11px;opacity:0;pointer-events:none;transition:.25s;z-index:130;box-shadow:var(--shadow);text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+.live-overlay{position:absolute;inset:0;z-index:70;display:none;flex-direction:column;background:linear-gradient(180deg,#153629,#081a13)}.live-overlay.show{display:flex}.live-map{flex:1;position:relative;background:linear-gradient(135deg,#d6e3d8,#9fb3a4);overflow:hidden}.live-panel{border-radius:30px 30px 0 0;padding:18px;background:linear-gradient(180deg,#183d2d,#0c2118);border-top:1px solid var(--line);margin-top:-26px;z-index:2}.trip-progress-ring{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) var(--progress,0%),rgba(255,255,255,.09) 0);position:relative}.trip-progress-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#123124}.trip-progress-ring b{z-index:1;color:var(--lime)}
+.live-summary{display:flex;gap:14px;align-items:center}.live-summary .copy{flex:1}.live-summary h3{margin:0 0 5px;font-family:Georgia,'Times New Roman',serif}.live-summary p{margin:0;color:var(--muted);font-size:11px}
+.map-screen-controls{display:flex;gap:7px;overflow-x:auto;margin:8px 0 12px}.map-screen-controls button{white-space:nowrap}
+.layer-pin{position:absolute;width:34px;height:34px;border-radius:14px;background:#1b4b35;color:var(--lime);display:grid;place-items:center;border:2px solid rgba(255,255,255,.75);box-shadow:0 8px 18px rgba(0,0,0,.25);z-index:7}.layer-pin.ev{left:22%;top:34%}.layer-pin.recycle{right:20%;top:25%}.layer-pin.store{right:35%;bottom:25%}.layer-pin.transit{left:43%;bottom:18%}
+.admin-wrap{padding-bottom:28px}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.admin-metric{border-radius:20px;padding:15px}.admin-metric b{font-family:Georgia,'Times New Roman',serif;font-size:25px;color:var(--lime);display:block}.admin-metric span{font-size:9px;color:var(--muted)}
+.heat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;padding:12px;border-radius:20px}.heat-cell{aspect-ratio:1;border-radius:6px;background:rgba(216,249,155,var(--heat,.1))}
+.bar-row{display:grid;grid-template-columns:74px 1fr 34px;gap:9px;align-items:center;margin-bottom:10px;font-size:10px}.bar{height:8px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--mint),var(--lime))}
+.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:12px}
+.demo-label{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;background:rgba(245,213,141,.10);color:var(--warn);border:1px solid rgba(245,213,141,.20);font-size:8px;font-weight:800;letter-spacing:.6px}
+@media(min-width:720px){body{padding:20px}.app-shell{height:calc(100% - 40px);border-radius:42px}.modal-bg,.live-overlay,.side-menu{border-radius:42px;overflow:hidden}}
+
+.profile-top{width:39px;height:39px;border-radius:14px;border:1px solid rgba(216,249,155,.28);background:linear-gradient(145deg,rgba(216,249,155,.22),rgba(255,255,255,.05));color:var(--lime);font-weight:900;font-size:11px;display:grid;place-items:center;cursor:pointer;flex:0 0 auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.profile-top:active{transform:scale(.96)}
+.module-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:18px}
+.module-box{border-radius:24px;padding:17px;position:relative;overflow:hidden}
+.module-box:before{content:"";position:absolute;right:-34px;top:-34px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,rgba(216,249,155,.16),transparent 68%)}
+.module-head{display:flex;align-items:center;gap:12px;margin-bottom:9px;position:relative;z-index:1}
+.module-icon{width:45px;height:45px;border-radius:15px;display:grid;place-items:center;background:rgba(216,249,155,.12);border:1px solid rgba(216,249,155,.18);font-size:21px;color:var(--lime)}
+.module-copy{flex:1;min-width:0}.module-copy h4{margin:0 0 4px;font-size:15px}.module-copy small{color:var(--lime);font-size:9px;letter-spacing:.7px;text-transform:uppercase}
+.module-box p{color:var(--muted);font-size:11.5px;line-height:1.55;margin:0 0 13px;position:relative;z-index:1}
+.module-actions{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1}.module-actions button{flex:1;min-width:110px}
+.discovery-banner{border-radius:28px;padding:22px;margin:8px 0 16px;min-height:170px;background:radial-gradient(circle at 85% 25%,rgba(216,249,155,.28),transparent 24%),linear-gradient(145deg,rgba(74,126,91,.55),rgba(19,55,39,.5));position:relative;overflow:hidden}
+.discovery-banner h2{font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.05;margin:0 0 10px;max-width:62%}.discovery-banner p{font-size:11.5px;color:#d5e1d8;max-width:64%;line-height:1.5}.discovery-orbit{position:absolute;right:18px;top:25px;width:112px;height:112px;border:1px solid rgba(216,249,155,.32);border-radius:50%;box-shadow:0 0 0 18px rgba(216,249,155,.05),0 0 0 38px rgba(216,249,155,.025)}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.metric-mini{padding:12px 7px;border-radius:17px;text-align:center;background:rgba(255,255,255,.045);border:1px solid var(--line)}.metric-mini b{display:block;color:var(--lime);font-size:17px}.metric-mini span{font-size:8px;color:var(--dim);text-transform:uppercase}
+
+
+/* ===== RICH MODULE CARDS V2 ===== */
+.bottom-nav{
+  left:8px;right:8px;height:68px;padding:6px 5px;
+  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:2px;overflow:hidden;border-radius:22px;
+}
+.nav-btn{
+  min-width:0;width:100%;padding:4px 1px;flex:none;
+  font-size:6.4px;line-height:1;letter-spacing:-.15px;white-space:nowrap;
+  overflow:hidden;text-overflow:clip;border-radius:14px;gap:3px;
+}
+.nav-btn svg{width:18px;height:18px;flex:0 0 auto}
+.scroll{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+@media(max-width:360px){
+  .bottom-nav{left:5px;right:5px;gap:0;padding:5px 3px}
+  .nav-btn{font-size:5.8px}.nav-btn svg{width:17px;height:17px}
+}
+.module-grid{gap:14px}
+.module-box.rich-module{padding:0;overflow:hidden;border-radius:26px}
+.rich-module .module-top{display:flex;align-items:center;gap:12px;padding:16px 16px 10px;position:relative;z-index:2}
+.rich-module .module-icon{width:48px;height:48px;border-radius:16px;font-size:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.rich-module .module-copy h4{font-size:15.5px;margin-bottom:3px}
+.rich-module .module-copy small{font-size:8.5px}
+.module-score{margin-left:auto;text-align:right;flex:0 0 auto}
+.module-score b{display:block;color:var(--lime);font:700 21px Georgia,serif;line-height:1}
+.module-score span{font-size:7px;text-transform:uppercase;color:var(--dim);letter-spacing:.7px}
+.module-visual{height:128px;margin:0 12px 12px;border-radius:20px;position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(216,249,155,.10),rgba(255,255,255,.025));border:1px solid rgba(216,249,155,.12)}
+.module-visual:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(to bottom,black,transparent)}
+.module-vector{position:absolute;right:10px;top:10px;width:112px;height:102px;opacity:.9;filter:drop-shadow(0 14px 20px rgba(0,0,0,.25))}
+.module-vector *{vector-effect:non-scaling-stroke}
+.module-chart-wrap{position:absolute;left:14px;bottom:13px;width:54%;z-index:2}
+.module-chart-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:8px}
+.module-chart-head span{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.module-chart-head b{font-size:11px;color:var(--lime)}
+.mini-chart{height:45px;display:flex;align-items:flex-end;gap:5px}
+.mini-chart i{flex:1;min-width:5px;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,var(--lime),rgba(142,224,174,.28));box-shadow:0 0 12px rgba(216,249,155,.08);transition:height .35s}
+.module-description{padding:0 16px;margin:0 0 12px!important;font-size:11.2px!important;line-height:1.5!important}
+.choice-panel{margin:0 12px 12px;padding:11px 12px;border-radius:17px;background:rgba(3,17,11,.34);border:1px solid rgba(216,249,155,.13);display:flex;align-items:center;gap:10px;position:relative;z-index:2}
+.choice-radio{width:20px;height:20px;border-radius:50%;border:1px solid rgba(216,249,155,.42);display:grid;place-items:center;flex:0 0 auto}.choice-radio:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 9px rgba(216,249,155,.55)}
+.choice-main{min-width:0;flex:1}.choice-main small{display:block;color:var(--dim);font-size:7.5px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}.choice-main b{display:block;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.choice-points{flex:0 0 auto;padding:7px 9px;border-radius:12px;background:rgba(216,249,155,.13);border:1px solid rgba(216,249,155,.20);color:var(--lime);font-size:10px;font-weight:800}
+.rich-module .module-actions{padding:0 12px 13px;display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:8px}
+.rich-module .module-actions button{min-width:0;width:100%;padding:12px 8px;font-size:10.5px}
+.module-more-btn{background:rgba(255,255,255,.045)!important;border:1px solid var(--line)!important;border-radius:16px!important;font-weight:800;cursor:pointer}
+.option-list{display:flex;flex-direction:column;gap:9px;margin:14px 0}
+.option-row{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:16px;padding:12px;display:flex;align-items:center;gap:10px;text-align:left;cursor:pointer;color:var(--text)}
+.option-row.selected{border-color:rgba(216,249,155,.45);background:rgba(216,249,155,.11)}
+.option-row .opt-icon{width:34px;height:34px;border-radius:12px;background:rgba(216,249,155,.11);display:grid;place-items:center;color:var(--lime);font-size:16px;flex:0 0 auto}
+.option-row .opt-copy{flex:1;min-width:0}.option-row .opt-copy b{display:block;font-size:12px;margin-bottom:3px}.option-row .opt-copy span{display:block;font-size:9px;color:var(--muted);line-height:1.3}
+.option-row .opt-points{color:var(--lime);font-weight:900;font-size:11px;white-space:nowrap}
+.module-section-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
+.module-summary-card{padding:11px 7px;border-radius:16px;text-align:center;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.module-summary-card b{display:block;color:var(--lime);font:700 17px Georgia,serif}.module-summary-card span{font-size:7px;color:var(--dim);text-transform:uppercase;letter-spacing:.55px}
+
+
+/* ===== Pro2 chart diversity ===== */
+.mini-chart{position:relative;overflow:hidden}
+.mini-chart svg{width:100%;height:100%;display:block;overflow:visible}
+.mini-chart .gridline{stroke:rgba(255,255,255,.08);stroke-width:1}
+.mini-chart .chart-line{fill:none;stroke:var(--lime);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px rgba(216,249,155,.28))}
+.mini-chart .chart-area{fill:url(#chartAreaGradient);opacity:.5}
+.mini-chart .chart-dot{fill:var(--lime);stroke:rgba(8,29,20,.9);stroke-width:1.3}
+.mini-chart.chart-donut,.mini-chart.chart-ring,.mini-chart.chart-gauge{display:grid;place-items:center}
+.mini-chart .donut-wrap{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--lime) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative;box-shadow:0 0 16px rgba(216,249,155,.08)}
+.mini-chart .donut-wrap:after{content:"";position:absolute;inset:7px;border-radius:50%;background:rgba(17,43,31,.96);border:1px solid rgba(255,255,255,.04)}
+.mini-chart .donut-wrap b{position:relative;z-index:2;font-size:9px;color:var(--lime)}
+.mini-chart.chart-funnel{align-items:center;flex-direction:column;justify-content:center;gap:3px}
+.mini-chart.chart-funnel i{display:block;height:5px!important;flex:none;border-radius:99px;background:linear-gradient(90deg,var(--mint),var(--lime));opacity:.9}
+.mini-chart.chart-stacked{display:flex;align-items:center;height:45px}
+.mini-chart.chart-stacked .stack{height:12px;width:100%;display:flex;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.06)}
+.mini-chart.chart-stacked .stack i{height:100%!important;min-width:0;border-radius:0;box-shadow:none}
+.mini-chart.chart-progress{display:flex;flex-direction:column;justify-content:center;gap:5px}
+.mini-chart.chart-progress .progress-row{display:grid;grid-template-columns:18px 1fr 18px;align-items:center;gap:5px;font-size:6px;color:var(--dim)}
+.mini-chart.chart-progress .track{height:5px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.mini-chart.chart-progress .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--mint),var(--lime))}
+.mini-chart.chart-radar{display:grid;place-items:center}
+.mini-chart.chart-radar svg{width:48px;height:48px}
+.mini-chart.chart-radar .radar-grid{fill:none;stroke:rgba(255,255,255,.12);stroke-width:1}
+.mini-chart.chart-radar .radar-shape{fill:rgba(216,249,155,.2);stroke:var(--lime);stroke-width:1.5}
+.mini-chart.chart-steps{display:flex;align-items:flex-end;gap:3px}
+.mini-chart.chart-steps i{border-radius:2px;background:linear-gradient(180deg,var(--lime),rgba(142,224,174,.24));position:relative}
+.mini-chart.chart-steps i:after{content:"";position:absolute;left:0;right:0;top:-3px;height:2px;border-radius:2px;background:rgba(216,249,155,.65)}
+.mini-chart.chart-dots{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.mini-chart.chart-dots i{width:7px;height:7px!important;flex:none;border-radius:50%;background:var(--lime);box-shadow:0 0 0 calc(var(--s)*1px) rgba(216,249,155,.08),0 0 10px rgba(216,249,155,.18)}
+.mini-chart.chart-score{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;align-items:end}
+.mini-chart.chart-score .score-col{height:42px;border-radius:7px;background:rgba(255,255,255,.05);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+.mini-chart.chart-score .score-col i{position:absolute;left:0;right:0;bottom:0;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--lime),rgba(142,224,174,.24))}
+.mini-chart.chart-score .score-col span{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:6px;color:#10251b;font-weight:900;z-index:2}
+.mini-chart.chart-gauge .gauge-shell{width:54px;height:28px;overflow:hidden;position:relative}
+.mini-chart.chart-gauge .gauge-shell:before{content:"";position:absolute;left:0;top:0;width:54px;height:54px;border-radius:50%;background:conic-gradient(from 270deg,var(--lime) calc(var(--p)*.5%),rgba(255,255,255,.08) 0 50%,transparent 50%);}
+.mini-chart.chart-gauge .gauge-shell:after{content:"";position:absolute;left:8px;top:8px;width:38px;height:38px;border-radius:50%;background:rgba(17,43,31,.98)}
+.mini-chart.chart-gauge b{position:absolute;left:0;right:0;bottom:0;text-align:center;font-size:8px;color:var(--lime);z-index:2}
+.mini-chart.chart-columns i:nth-child(odd){background:linear-gradient(180deg,var(--mint),rgba(142,224,174,.18))}
+.mini-chart.chart-columns i:nth-child(even){background:linear-gradient(180deg,var(--lime),rgba(216,249,155,.18))}
+
+</style>
+<!-- Green Mobility & Rewards MVP Pro2: diversified chart system -->
+</head>
+<body>
+<div class="app-shell" id="app">
+  <section class="screen splash active" id="screen-splash">
+    <div class="splash-leaf"><i class="leaf l1"></i><i class="leaf l2"></i><i class="leaf l3"></i></div>
+    <div class="splash-card glass">
+      <div class="logo-mark">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 53V25"/><path d="M31 34C18 34 12 26 13 14c12-1 21 5 21 17"/><path d="M33 41c13 0 20-8 19-20-12-1-21 5-21 17"/><path d="M24 50c3-6 7-10 14-13"/></svg>
+      </div>
+      <h1>GreenLoop</h1>
+      <h2>Mobility & Rewards OS</h2>
+      <p>Move smarter.<br>Earn greener.<br>Build a better city.</p>
+      <button class="primary-btn" id="getStarted">Get Started <span>→</span></button>
+    </div>
+    <div style="position:relative;z-index:2;margin-top:22px" class="demo-label">● INTERACTIVE MVP · ABU DHABI</div>
+  </section>
+
+  <section class="screen" id="screen-home">
+    <header class="topbar">
+      <button class="icon-btn" data-open-menu aria-label="Open menu">☰</button>
+      <div class="brand"><b>GreenLoop</b><small>Abu Dhabi Pilot · GreenLoop</small></div>
+      <button class="icon-btn" id="notifBtn">♧<span class="badge-dot" id="notifBadge">2</span></button>
+    </header>
+    <div class="scroll">
+      <div class="hero glass">
+        <div class="hero-copy"><h2>Move Smarter.<br>Earn Greener.</h2><p>Low-carbon routes, verified city actions and rewards in one place.</p><button class="hero-chip" data-nav="route">Plan a trip →</button></div>
+        <svg class="hero-city" viewBox="0 0 170 130" aria-hidden="true"><defs><linearGradient id="g1" x1="0" x2="1"><stop stop-color="#d8f99b" stop-opacity=".8"/><stop offset="1" stop-color="#69a976" stop-opacity=".4"/></linearGradient></defs><path d="M15 112h140" stroke="#d7efcf" stroke-opacity=".3"/><path d="M33 112V65h24v47M62 112V42h28v70M94 112V58h22v54M121 112V30h22v82" fill="url(#g1)" opacity=".55"/><path d="M6 110c26-28 53-12 78-43 22-27 46-26 76-44" fill="none" stroke="#d8f99b" stroke-width="4" stroke-linecap="round"/><circle cx="83" cy="69" r="6" fill="#efffd0"/><path d="M124 21c-15 6-22 18-21 31 16-2 26-12 28-28-3-2-5-3-7-3z" fill="#d8f99b" opacity=".78"/></svg>
+      </div>
+      <div class="stats">
+        <div class="stat glass"><b id="homePoints">420</b><span>Green Points</span></div>
+        <div class="stat glass"><b id="homeCarbon">8.4</b><span>kg CO₂ saved</span></div>
+        <div class="stat glass"><b id="homeStreak">4</b><span>Day streak</span></div>
+      </div>
+      <div class="quick-grid">
+        <button class="quick" data-nav="route"><div class="qi">↗</div><span>Plan Route</span></button>
+        <button class="quick" id="scanQrBtn"><div class="qi">▦</div><span>Scan QR</span></button>
+        <button class="quick" data-nav="challenges"><div class="qi">◎</div><span>Challenges</span></button>
+        <button class="quick" data-open-map><div class="qi">⌖</div><span>Green Map</span></button>
+      </div>
+      <div class="section-head"><h3>Recommended Trip</h3><button data-nav="route">View all →</button></div>
+      <div class="route-card glass">
+        <div class="route-title">Al Reem Island → Masdar City</div>
+        <div class="route-meta"><span class="pill green">Balanced</span><span class="pill">42 min</span><span class="pill">2.6 kg CO₂ saved</span><span class="pill">+35 points</span></div>
+        <div class="card-actions"><button class="secondary-btn" id="quickStartTrip">Start Trip</button><button class="secondary-btn" data-nav="route">Compare</button></div>
+      </div>
+      <div class="section-head"><h3>Active Challenge</h3><button data-nav="challenges">See all →</button></div>
+      <div class="challenge-card glass">
+        <h4>Transit Week</h4><p>Use public transport 5 times this week.</p>
+        <div class="challenge-meta"><span id="homeChallengeText">2 of 5 trips</span><span>+150 pts</span></div>
+        <div class="progress"><i id="homeChallengeProgress" style="width:40%"></i></div>
+      </div>
+      <div class="section-head"><h3>Nearby Rewards</h3><button data-nav="wallet">View all →</button></div>
+      <div class="reward-grid" id="homeRewards"></div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-route">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>GreenRoute</b><small>Low-carbon planner</small></div><button class="icon-btn" data-open-map>⌖</button></header>
+    <div class="scroll">
+      <h1 class="page-title">Plan your route</h1><div class="page-sub">Compare time, cost, carbon and rewards.</div>
+      <div class="form-card glass">
+        <div class="field"><span class="dot"></span><input id="originInput" value="Al Reem Island" placeholder="Origin"/><button class="icon-btn" style="width:32px;height:32px;border-radius:11px" id="locateBtn">⌾</button></div>
+        <div class="field"><span class="dot dest"></span><input id="destinationInput" value="Masdar City" placeholder="Destination"/></div>
+        <div class="chips" id="priorityChips">
+          <button class="chip" data-priority="Fastest">Fastest</button><button class="chip" data-priority="Greenest">Greenest</button><button class="chip" data-priority="Cheapest">Cheapest</button><button class="chip active" data-priority="Balanced">Balanced</button><button class="chip" data-priority="Accessible">Accessible</button>
+        </div>
+        <button class="primary-btn" id="findRoutesBtn">Find Routes</button>
+      </div>
+      <div class="map-card" id="routeMap"><div class="map-grid"></div><i class="map-zone z1"></i><i class="map-zone z2"></i><i class="map-zone z3"></i><i class="map-road r1"></i><i class="map-road r2"></i><i class="map-road r3"></i><i class="route-line a"></i><i class="route-line b"></i><i class="pin p1"></i><i class="pin p2"></i><div class="map-label" id="mapLabel">Balanced route · 42 min</div></div>
+      <div id="routeResults"></div>
+      <button class="primary-btn" id="startSelectedTrip">Start Selected Trip →</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-challenges">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Challenges</b><small>Earn through action</small></div><button class="icon-btn" id="activityModalBtn">＋</button></header>
+    <div class="scroll">
+      <h1 class="page-title">Your green missions</h1><div class="page-sub">Complete verified actions and collect rewards.</div>
+      <div class="section-head"><h3>Quick activity</h3><button id="showAllActivity">Log action →</button></div>
+      <div class="activity-grid" id="activityGrid"></div>
+      <div class="section-head"><h3>Active challenges</h3><button id="refreshChallenges">Refresh</button></div>
+      <div id="challengeList"></div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-wallet">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Green Wallet</b><small>Points & rewards</small></div><button class="icon-btn" id="walletInfo">i</button></header>
+    <div class="scroll">
+      <div class="wallet-hero glass"><small>Available balance</small><div class="balance"><span id="walletPoints">420</span> <span style="font-size:15px">pts</span></div><div class="route-meta"><span class="pill green" id="walletCarbon">8.4 kg CO₂ saved</span><span class="pill" id="walletLifetime">420 lifetime pts</span></div></div>
+      <div class="chips" id="rewardFilters"><button class="chip active" data-filter="All">All</button><button class="chip" data-filter="Transport">Transport</button><button class="chip" data-filter="EV">EV</button><button class="chip" data-filter="Food">Food</button><button class="chip" data-filter="Retail">Retail</button></div>
+      <div class="section-head"><h3>Rewards marketplace</h3><button id="sortRewards">Sort by points</button></div>
+      <div class="reward-grid" id="rewardGrid"></div>
+      <div class="section-head"><h3>Recent activity</h3><button id="clearTransactions">Clear</button></div>
+      <div class="transactions glass" style="border-radius:22px;padding:4px 14px" id="transactionList"></div>
+    </div>
+  </section>
+
+
+  <section class="screen" id="screen-discover">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Discover</b><small>Green city around you</small></div><button class="icon-btn" data-open-map>⌖</button></header>
+    <div class="scroll">
+      <div class="discovery-banner glass"><h2>Explore a greener city.</h2><p>Find verified rewards, events, eco routes and sustainable places around Abu Dhabi.</p><div class="discovery-orbit"></div></div>
+      <div class="module-section-summary"><div class="module-summary-card"><b>28</b><span>Nearby places</span></div><div class="module-summary-card"><b>640</b><span>Available points</span></div><div class="module-summary-card"><b>7</b><span>Live events</span></div></div>
+      <div class="quick-grid"><button class="quick" data-open-map><div class="qi">⌖</div><span>Green Map</span></button><button class="quick" id="discoverStores"><div class="qi">◈</div><span>Green Stores</span></button><button class="quick" id="discoverEvents"><div class="qi">◉</div><span>Events</span></button><button class="quick" id="discoverEcoRoutes"><div class="qi">↗</div><span>Eco Routes</span></button></div>
+      <div class="section-head"><h3>Recommended nearby</h3><button data-open-map>Open map →</button></div>
+      <div class="module-grid"><div class="module-box rich-module glass" data-module-card="discover-ev">
+      <div class="module-top"><div class="module-icon">⚡</div><div class="module-copy"><h4>EV Charging Discovery</h4><small>Live availability</small></div><div class="module-score"><b>4/6</b><span>available</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M22 78h73M34 78V45h41v33M42 45V30h24v15M50 30V18h8v12M84 29c9 7 14 17 12 29-10 1-18-4-23-12 1-8 5-14 11-17Z"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="m57 46-8 13h8l-4 13 14-18h-8l5-8"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Hub availability</span><b data-module-trend>+18%</b></div><div class="mini-chart" data-module-chart><i style="height:32%"></i><i style="height:49%"></i><i style="height:58%"></i><i style="height:43%"></i><i style="height:76%"></i><i style="height:92%"></i></div></div></div>
+      <p class="module-description">Compare verified charging hubs using distance, availability, congestion and reward value.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Masdar Fast-Charge Hub</b></div><span class="choice-points" data-choice-points>+25 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="discoverNavigate">Navigate</button><button class="module-more-btn" data-module-more="discover-ev">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="discover-event">
+      <div class="module-top"><div class="module-icon">🌿</div><div class="module-copy"><h4>Green Events</h4><small>Verified attendance</small></div><div class="module-score"><b>120</b><span>max points</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M26 76h67M36 76V39h47v37M45 31v16M74 31v16M36 50h47M48 61h8M65 61h8"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M87 25c-11 3-18 11-19 21 11 1 20-5 24-16-1-2-3-4-5-5Z"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Weekly participation</span><b data-module-trend>+31%</b></div><div class="mini-chart" data-module-chart><i style="height:21%"></i><i style="height:35%"></i><i style="height:30%"></i><i style="height:52%"></i><i style="height:68%"></i><i style="height:83%"></i></div></div></div>
+      <p class="module-description">Join a real local activity, confirm attendance by QR and earn rewards based on participation.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Urban Garden Weekend</b></div><span class="choice-points" data-choice-points>+120 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="joinGreenEvent">Join Event</button><button class="module-more-btn" data-module-more="discover-event">More</button></div>
+    </div></div></div>
+  </section>
+
+  <section class="screen" id="screen-community">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Community</b><small>Grow together</small></div><button class="icon-btn" id="communityInviteTop">＋</button></header>
+    <div class="scroll">
+      <h1 class="page-title">Green communities</h1><div class="page-sub">Build verified networks, collaborate locally and earn through measurable climate action.</div>
+      <div class="module-section-summary"><div class="module-summary-card"><b id="communityMemberCount">1,248</b><span>Members</span></div><div class="module-summary-card"><b>36.2K</b><span>Points earned</span></div><div class="module-summary-card"><b>4.8t</b><span>CO₂ avoided</span></div></div>
+      <div class="module-grid"><div class="module-box rich-module glass" data-module-card="referral">
+      <div class="module-top"><div class="module-icon">⇧</div><div class="module-copy"><h4>Referral Network</h4><small>Invite & verified earn</small></div><div class="module-score"><b>3</b><span>levels</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><circle stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" cx="60" cy="27" r="10"/><circle stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" cx="29" cy="61" r="9"/><circle stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" cx="91" cy="61" r="9"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M53 36 35 52M67 36l18 16M38 68l17 10M82 68 65 78M60 37v39"/><circle cx="60" cy="80" r="8" fill="#d8f99b" opacity=".3" stroke="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Network growth</span><b data-module-trend>+28%</b></div><div class="mini-chart" data-module-chart><i style="height:12%"></i><i style="height:24%"></i><i style="height:31%"></i><i style="height:47%"></i><i style="height:63%"></i><i style="height:84%"></i></div></div></div>
+      <p class="module-description">Build a three-level referral network. Rewards unlock only after each invited person completes a verified green action.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Invite 1 verified friend</b></div><span class="choice-points" data-choice-points>+100 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="copyReferral">Invite Friend</button><button class="module-more-btn" data-module-more="referral">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="green-community">
+      <div class="module-top"><div class="module-icon">🌱</div><div class="module-copy"><h4>Green Community</h4><small>Neighbourhood action</small></div><div class="module-score"><b>#2</b><span>city rank</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M60 82V43M58 54c-16 0-25-10-24-25 15-1 26 7 26 22M62 63c16 0 25-10 24-25-15-1-26 7-26 22"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M24 82c8-14 19-19 36-19s28 5 36 19"/><circle cx="60" cy="82" r="4" fill="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Community activity</span><b data-module-trend>+19%</b></div><div class="mini-chart" data-module-chart><i style="height:28%"></i><i style="height:36%"></i><i style="height:42%"></i><i style="height:59%"></i><i style="height:71%"></i><i style="height:88%"></i></div></div></div>
+      <p class="module-description">Join local groups, complete neighbourhood missions and compare verified impact across Abu Dhabi districts.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Reem Beach Clean-up</b></div><span class="choice-points" data-choice-points>+85 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="joinGreenCommunity">Join Mission</button><button class="module-more-btn" data-module-more="green-community">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="academic">
+      <div class="module-top"><div class="module-icon">🎓</div><div class="module-copy"><h4>Academic & University</h4><small>Campus climate network</small></div><div class="module-score"><b>14</b><span>projects</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="m18 43 42-22 42 22-42 22-42-22Z"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M35 54v19c14 10 36 10 50 0V54M102 43v26"/><circle cx="102" cy="73" r="4" fill="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Campus participation</span><b data-module-trend>+22%</b></div><div class="mini-chart" data-module-chart><i style="height:18%"></i><i style="height:29%"></i><i style="height:41%"></i><i style="height:49%"></i><i style="height:66%"></i><i style="height:79%"></i></div></div></div>
+      <p class="module-description">Students and researchers collaborate on campus challenges, publish projects and measure institutional carbon impact.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Masdar Campus Mobility Lab</b></div><span class="choice-points" data-choice-points>+180 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="joinAcademic">Join Project</button><button class="module-more-btn" data-module-more="academic">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="sponsored">
+      <div class="module-top"><div class="module-icon">✦</div><div class="module-copy"><h4>Sponsored Campaigns</h4><small>Brands fund impact</small></div><div class="module-score"><b>150</b><span>reward pts</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M27 72h66M34 72V42h52v30M43 42l17-18 17 18M49 58h22"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M89 27c-10 2-16 8-18 17 10 2 18-3 23-12-1-2-3-4-5-5Z"/><circle cx="31" cy="28" r="8" fill="#d8f99b" opacity=".18" stroke="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Campaign completion</span><b data-module-trend>68%</b></div><div class="mini-chart" data-module-chart><i style="height:24%"></i><i style="height:35%"></i><i style="height:49%"></i><i style="height:58%"></i><i style="height:68%"></i><i style="height:81%"></i></div></div></div>
+      <p class="module-description">Brands and municipalities fund verified mobility, recycling and energy missions with transparent reward budgets.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Car-Free Friday</b></div><span class="choice-points" data-choice-points>+150 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="joinSponsored">Join Campaign</button><button class="module-more-btn" data-module-more="sponsored">More</button></div>
+    </div></div></div>
+  </section>
+
+  <section class="screen" id="screen-smartcity">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Smart City</b><small>Citizen intelligence</small></div><button class="icon-btn" id="smartCityDashboard">▥</button></header>
+    <div class="scroll">
+      <h1 class="page-title">City action centre</h1><div class="page-sub">Report problems, analyse green property opportunities and use verified urban technology services.</div>
+      <div class="module-section-summary"><div class="module-summary-card"><b>92%</b><span>Reports routed</span></div><div class="module-summary-card"><b>84</b><span>PropTech signal</span></div><div class="module-summary-card"><b>2.1t</b><span>Waste diverted</span></div></div>
+      <div class="module-grid"><div class="module-box rich-module glass" data-module-card="urban-report">
+      <div class="module-top"><div class="module-icon">!</div><div class="module-copy"><h4>Urban Reporting</h4><small>Citizen reporting</small></div><div class="module-score"><b>15</b><span>report points</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M31 20h58v64H31zM43 37h34M43 49h34M43 61h22"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M84 69 98 83M91 76l8-8"/><circle cx="82" cy="67" r="12" fill="#d8f99b" opacity=".14" stroke="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Resolution rate</span><b data-module-trend>92%</b></div><div class="mini-chart" data-module-chart><i style="height:38%"></i><i style="height:47%"></i><i style="height:56%"></i><i style="height:68%"></i><i style="height:82%"></i><i style="height:92%"></i></div></div></div>
+      <p class="module-description">Submit a geotagged problem with category, photo and GPS. Track its municipal status and community value.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Report a water leak</b></div><span class="choice-points" data-choice-points>+15 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="reportCityIssue">Create Report</button><button class="module-more-btn" data-module-more="urban-report">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="proptech">
+      <div class="module-top"><div class="module-icon">⌂</div><div class="module-copy"><h4>Green PropTech AI</h4><small>Property investment assistant</small></div><div class="module-score"><b>84</b><span>signal score</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M23 81h74M31 81V49h19v32M54 81V31h25v50M83 81V57h11v24"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M25 43c18-15 36-9 49-24 8-8 14-11 24-12"/><circle cx="74" cy="19" r="4" fill="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Investment signal</span><b data-module-trend>+16%</b></div><div class="mini-chart" data-module-chart><i style="height:42%"></i><i style="height:55%"></i><i style="height:51%"></i><i style="height:68%"></i><i style="height:76%"></i><i style="height:84%"></i></div></div></div>
+      <p class="module-description">Compare neighbourhoods using mobility, walkability, green buildings, heat exposure and development potential.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Masdar South Growth Zone</b></div><span class="choice-points" data-choice-points>+40 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="runPropTech">Analyse Zone</button><button class="module-more-btn" data-module-more="proptech">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="recycletech">
+      <div class="module-top"><div class="module-icon">♻</div><div class="module-copy"><h4>RecycleTech</h4><small>Smart circular city</small></div><div class="module-score"><b>20</b><span>action points</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="m61 18 13 22H62M87 47 75 69l-7-12M53 80H29l10-17M33 47l13-22 8 12"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M41 37h18M68 57l10 17M39 63l-9-16"/><rect x="83" y="20" width="17" height="17" rx="3" fill="#d8f99b" opacity=".18" stroke="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Diversion volume</span><b data-module-trend>+37%</b></div><div class="mini-chart" data-module-chart><i style="height:19%"></i><i style="height:27%"></i><i style="height:39%"></i><i style="height:51%"></i><i style="height:69%"></i><i style="height:86%"></i></div></div></div>
+      <p class="module-description">Use QR-enabled bins, e-waste pickup and verified material tracking to create measurable circular-city impact.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Smart Bin QR · Al Reem</b></div><span class="choice-points" data-choice-points>+20 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="scanSmartBin">Scan & Recycle</button><button class="module-more-btn" data-module-more="recycletech">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="sciencetech">
+      <div class="module-top"><div class="module-icon">◇</div><div class="module-copy"><h4>ScienceTech Certificates</h4><small>Learning to certification</small></div><div class="module-score"><b>60</b><span>course points</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M46 18h28M52 18v23L31 78h58L68 41V18M43 62h34"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M45 72c10-10 20 7 30-4"/><circle cx="83" cy="28" r="8" fill="#d8f99b" opacity=".16" stroke="#d8f99b"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Course progress</span><b data-module-trend>60%</b></div><div class="mini-chart" data-module-chart><i style="height:10%"></i><i style="height:22%"></i><i style="height:34%"></i><i style="height:46%"></i><i style="height:55%"></i><i style="height:60%"></i></div></div></div>
+      <p class="module-description">Complete courses and assessments for buildings or companies, then unlock a verifiable Green Science certificate.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Green Building Foundation</b></div><span class="choice-points" data-choice-points>+60 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="browseCourses">Start Course</button><button class="module-more-btn" data-module-more="sciencetech">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="fintech">
+      <div class="module-top"><div class="module-icon">₣</div><div class="module-copy"><h4>Green FinTech</h4><small>Rewards meet finance</small></div><div class="module-score"><b>25</b><span>bonus points</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><rect stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" x="25" y="25" width="70" height="52" rx="12"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M25 42h70M39 61h17M74 54v15M67 61h14"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M88 18c-10 2-17 9-18 18 10 1 19-4 23-13-1-2-3-4-5-5Z"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Wallet adoption</span><b data-module-trend>+24%</b></div><div class="mini-chart" data-module-chart><i style="height:14%"></i><i style="height:21%"></i><i style="height:33%"></i><i style="height:46%"></i><i style="height:62%"></i><i style="height:78%"></i></div></div></div>
+      <p class="module-description">Use licensed partners to convert verified activity into mobility cashback, employer credits or opt-in climate savings.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Mobility Micro-Savings</b></div><span class="choice-points" data-choice-points>+25 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="openGreenFinance">Activate Wallet</button><button class="module-more-btn" data-module-more="fintech">More</button></div>
+    </div></div></div>
+  </section>
+
+  <section class="screen" id="screen-merchant">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Merchant Portal</b><small>Green commerce</small></div><button class="icon-btn" id="merchantSettings">⚙</button></header>
+    <div class="scroll">
+      <div class="profile-hero glass"><div class="avatar">GC</div><h2 style="font-family:Georgia,'Times New Roman',serif;margin:0">Green Corner Café</h2><div class="page-sub" style="margin:6px 0">Verified reward partner · Abu Dhabi</div><div class="level-row"><span>GOLD PARTNER</span><span id="merchantRedemptions">48 REDEMPTIONS</span><span>4.8 ★</span></div></div>
+      <div class="stats"><div class="stat glass"><b id="merchantViews">1.2K</b><span>Offer Views</span></div><div class="stat glass"><b>18%</b><span>Conversion</span></div><div class="stat glass"><b>62kg</b><span>Impact</span></div></div>
+      <div class="module-grid"><div class="module-box rich-module glass" data-module-card="merchant-profile">
+      <div class="module-top"><div class="module-icon">◈</div><div class="module-copy"><h4>Business Profile</h4><small>Store identity</small></div><div class="module-score"><b>82%</b><span>complete</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M25 42h70l-7-20H32l-7 20ZM30 42v39h60V42M46 81V59h28v22"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M25 42c0 9 14 9 14 0 0 9 14 9 14 0 0 9 14 9 14 0 0 9 14 9 14 0 0 9 14 9 14 0"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Profile strength</span><b data-module-trend>+12%</b></div><div class="mini-chart" data-module-chart><i style="height:35%"></i><i style="height:42%"></i><i style="height:49%"></i><i style="height:60%"></i><i style="height:72%"></i><i style="height:82%"></i></div></div></div>
+      <p class="module-description">Complete business details, sustainability evidence, locations and visibility settings.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Add sustainability evidence</b></div><span class="choice-points" data-choice-points>+40 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="editMerchantProfile">Complete Profile</button><button class="module-more-btn" data-module-more="merchant-profile">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="merchant-offer">
+      <div class="module-top"><div class="module-icon">%</div><div class="module-copy"><h4>Offers & Rewards</h4><small>Acquire green customers</small></div><div class="module-score"><b>18%</b><span>conversion</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="m22 51 32-32h40v40L62 91 22 51Z"/><circle stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" cx="76" cy="36" r="6"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M47 61 70 38M50 43h1M68 67h1"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Offer conversions</span><b data-module-trend>+6%</b></div><div class="mini-chart" data-module-chart><i style="height:8%"></i><i style="height:11%"></i><i style="height:13%"></i><i style="height:15%"></i><i style="height:17%"></i><i style="height:18%"></i></div></div></div>
+      <p class="module-description">Publish a point-based offer with inventory, target audience, time window and measurable conversion.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>15% off reusable cups</b></div><span class="choice-points" data-choice-points>+30 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="createMerchantOffer">Publish Offer</button><button class="module-more-btn" data-module-more="merchant-offer">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="merchant-qr">
+      <div class="module-top"><div class="module-icon">▦</div><div class="module-copy"><h4>QR Redemption</h4><small>Verify vouchers</small></div><div class="module-score"><b>48</b><span>verified</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M26 22h26v26H26zM68 22h26v26H68zM26 62h26v26H26zM68 62h10v10H68zM84 62h10v26H84M68 78h10v10H68"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M33 29h12v12H33zM75 29h12v12H75zM33 69h12v12H33z"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Daily redemptions</span><b data-module-trend>+21%</b></div><div class="mini-chart" data-module-chart><i style="height:4%"></i><i style="height:6%"></i><i style="height:5%"></i><i style="height:8%"></i><i style="height:10%"></i><i style="height:13%"></i></div></div></div>
+      <p class="module-description">Scan one-time customer vouchers, block duplicate use and update redemption analytics instantly.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Verify 1 customer voucher</b></div><span class="choice-points" data-choice-points>+15 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="merchantScan">Scan Voucher</button><button class="module-more-btn" data-module-more="merchant-qr">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="merchant-campaign">
+      <div class="module-top"><div class="module-icon">✦</div><div class="module-copy"><h4>Campaign Builder</h4><small>Sponsored actions</small></div><div class="module-score"><b>68%</b><span>completion</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M27 69V42l51-19v65L27 69ZM78 39h13c9 0 9 15 0 15H78M35 70l8 17h14l-9-13"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M91 23 102 15M94 34h15M92 45l11 7"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Campaign progress</span><b data-module-trend>68%</b></div><div class="mini-chart" data-module-chart><i style="height:15%"></i><i style="height:26%"></i><i style="height:37%"></i><i style="height:49%"></i><i style="height:58%"></i><i style="height:68%"></i></div></div></div>
+      <p class="module-description">Fund a local mobility or recycling mission and track reach, conversion, cost and avoided emissions.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Transit Bonus Campaign</b></div><span class="choice-points" data-choice-points>+100 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="merchantCampaign">Build Campaign</button><button class="module-more-btn" data-module-more="merchant-campaign">More</button></div>
+    </div><div class="module-box rich-module glass" data-module-card="merchant-cert">
+      <div class="module-top"><div class="module-icon">✓</div><div class="module-copy"><h4>Green Certification</h4><small>Trust & visibility</small></div><div class="module-score"><b>74%</b><span>assessment</span></div></div>
+      <div class="module-visual"><svg class="module-vector" viewBox="0 0 120 100"><rect stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" x="28" y="18" width="64" height="58" rx="8"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M42 34h36M42 46h27M42 58h20"/><circle cx="79" cy="62" r="12" fill="#d8f99b" opacity=".15" stroke="#d8f99b"/><path stroke="#d8f99b" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="m73 76-4 13 10-5 10 5-4-13"/></svg><div class="module-chart-wrap"><div class="module-chart-head"><span>Certification score</span><b data-module-trend>+9%</b></div><div class="mini-chart" data-module-chart><i style="height:32%"></i><i style="height:45%"></i><i style="height:51%"></i><i style="height:60%"></i><i style="height:68%"></i><i style="height:74%"></i></div></div></div>
+      <p class="module-description">Complete the assessment and improvement plan to advance from Gold to Green Champion status.</p>
+      <div class="choice-panel"><span class="choice-radio"></span><div class="choice-main"><small>Selected option</small><b data-choice-name>Packaging & Energy Audit</b></div><span class="choice-points" data-choice-points>+80 pts</span></div>
+      <div class="module-actions"><button class="primary-btn" id="merchantCertification">Continue Audit</button><button class="module-more-btn" data-module-more="merchant-cert">More</button></div>
+    </div></div></div>
+  </section>
+
+  <section class="screen" id="screen-profile">
+    <header class="topbar"><button class="icon-btn" data-open-menu>☰</button><div class="brand"><b>Profile</b><small>Impact & settings</small></div><button class="icon-btn" id="settingsBtn">⚙</button></header>
+    <div class="scroll">
+      <div class="profile-hero glass"><div class="avatar">AK</div><h2 style="font-family:Georgia,'Times New Roman',serif;margin:0">Armin Khodadad</h2><div class="page-sub" style="margin:6px 0">Abu Dhabi Green Citizen</div><div class="level-row"><span>LEVEL 4</span><span id="profilePoints">420 POINTS</span><span id="profileRank">#28 CITY</span></div><div class="progress"><i id="levelProgress" style="width:62%"></i></div></div>
+      <div class="stats"><div class="stat glass"><b id="profileTrips">7</b><span>Green Trips</span></div><div class="stat glass"><b id="profileCarbon">8.4</b><span>kg Saved</span></div><div class="stat glass"><b id="profileRewards">0</b><span>Rewards</span></div></div>
+      <div class="section-head"><h3>Badges</h3><button id="badgeInfo">View rules</button></div>
+      <div class="badges"><div class="badge-card"><b>🌿</b><span>First Trip</span></div><div class="badge-card"><b>🚌</b><span>Transit Pro</span></div><div class="badge-card"><b>♻️</b><span>Recycler</span></div><div class="badge-card"><b>⚡</b><span>EV Friend</span></div></div>
+      <div class="menu-list glass" style="border-radius:24px;padding:0 4px">
+        <button class="menu-row" data-open-map><span class="micon">⌖</span><span class="mcopy"><b>Green City Map</b><small>EV, recycling, stores and transit</small></span><span>›</span></button>
+        <button class="menu-row" id="openCityDashboard"><span class="micon">▥</span><span class="mcopy"><b>Municipal Dashboard</b><small>Open city intelligence demo</small></span><span>›</span></button>
+        <button class="menu-row" id="exportImpact"><span class="micon">⇩</span><span class="mcopy"><b>Export Impact Report</b><small>Download your activity as JSON</small></span><span>›</span></button>
+        <button class="menu-row" id="resetDemo"><span class="micon">↻</span><span class="mcopy"><b>Reset Demo Data</b><small>Restore the original MVP state</small></span><span>›</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-map">
+    <header class="topbar"><button class="icon-btn" id="mapBack">←</button><div class="brand"><b>Green Map</b><small>Live city layers</small></div><button class="icon-btn" id="centerMap">⌾</button></header>
+    <div class="scroll">
+      <h1 class="page-title">Abu Dhabi green network</h1><div class="page-sub">Explore mobility, rewards and infrastructure.</div>
+      <div class="map-screen-controls" id="mapFilters"><button class="chip active" data-layer="all">All</button><button class="chip active" data-layer="ev">EV</button><button class="chip active" data-layer="recycle">Recycle</button><button class="chip active" data-layer="store">Stores</button><button class="chip active" data-layer="transit">Transit</button><button class="chip" data-layer="heat">Emissions</button></div>
+      <div class="map-card" style="height:450px" id="greenMap"><div class="map-grid"></div><i class="map-zone z1" data-heat></i><i class="map-zone z2" data-heat></i><i class="map-zone z3" data-heat></i><i class="map-road r1"></i><i class="map-road r2"></i><i class="map-road r3"></i><span class="layer-pin ev" data-layer-pin="ev">⚡</span><span class="layer-pin recycle" data-layer-pin="recycle">♻</span><span class="layer-pin store" data-layer-pin="store">◈</span><span class="layer-pin transit" data-layer-pin="transit">🚌</span><div class="map-label" id="greenMapLabel">12 green locations nearby</div></div>
+      <div class="city-card glass"><h3 style="margin:0 0 6px">City opportunity</h3><p style="font-size:11px;color:var(--muted);line-height:1.5">Masdar City South has high EV demand and a 3.8 km charger gap. Suggested action: deploy two 150 kW fast chargers near the transit hub.</p><button class="secondary-btn" id="saveCityOpportunity">Save opportunity</button></div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-admin">
+    <header class="topbar"><button class="icon-btn" id="adminBack">←</button><div class="brand"><b>City Dashboard</b><small>Municipal intelligence</small></div><button class="icon-btn" id="adminRefresh">↻</button></header>
+    <div class="scroll admin-wrap">
+      <h1 class="page-title">Abu Dhabi overview</h1><div class="page-sub">Aggregated demo data. No personal trip details exposed.</div>
+      <div class="admin-grid"><div class="admin-metric glass"><b id="adminTrips">12.8K</b><span>Green trips this week</span></div><div class="admin-metric glass"><b id="adminCarbon">18.6t</b><span>CO₂ avoided</span></div><div class="admin-metric glass"><b>67%</b><span>Challenge participation</span></div><div class="admin-metric glass"><b>82</b><span>Reward partners</span></div></div>
+      <div class="section-head"><h3>Transport mode share</h3><button id="modeToggle">Weekly</button></div>
+      <div class="city-card glass"><div class="bar-row"><span>Public transit</span><div class="bar"><i style="width:42%"></i></div><b>42%</b></div><div class="bar-row"><span>Walking</span><div class="bar"><i style="width:26%"></i></div><b>26%</b></div><div class="bar-row"><span>Cycling</span><div class="bar"><i style="width:14%"></i></div><b>14%</b></div><div class="bar-row"><span>EV</span><div class="bar"><i style="width:18%"></i></div><b>18%</b></div></div>
+      <div class="section-head"><h3>Mobility emissions heatmap</h3><button id="heatRandomize">Update</button></div>
+      <div class="heat-grid glass" id="heatGrid"></div>
+      <div class="section-head"><h3>EV charger recommendations</h3><button id="compareChargers">Compare</button></div>
+      <div id="chargerList"></div>
+      <div class="section-head"><h3>Campaign manager</h3><button id="newCampaign">New campaign</button></div>
+      <div class="city-card glass" id="campaignCard"><h4 style="margin:0 0 6px">Transit Week</h4><p style="font-size:11px;color:var(--muted)">3,420 citizens joined · 68% completion · 4.1 t CO₂ avoided</p><div class="progress"><i style="width:68%"></i></div></div>
+    </div>
+  </section>
+
+
+  <div id="legacyActionSink" style="display:none" aria-hidden="true">
+    <button id="academicProjects"></button><button id="bookEWaste"></button><button id="certificateStatus"></button>
+    <button id="discoverSave"></button><button id="fintechRules"></button><button id="manageMerchantOffers"></button>
+    <button id="myCityReports"></button><button id="propTechWatchlist"></button><button id="redemptionHistory"></button>
+    <button id="simulateReferral"></button><button id="sponsorInfo"></button><button id="viewCommunityBoard"></button>
+  </div>
+  <nav class="bottom-nav glass" id="bottomNav">
+    <button class="nav-btn active" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9H6v-9"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></button>
+    <button class="nav-btn" data-nav="route"><svg viewBox="0 0 24 24"><path d="M5 4h4l6 16h4"/><circle cx="6" cy="4" r="2"/><circle cx="18" cy="20" r="2"/></svg><span>Move</span></button>
+    <button class="nav-btn" data-nav="challenges"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M7 12h10"/></svg><span>Earn</span></button>
+    <button class="nav-btn" data-nav="wallet"><svg viewBox="0 0 24 24"><path d="M4 6h14a2 2 0 0 1 2 2v10H4z"/><path d="M15 12h5"/></svg><span>Wallet</span></button>
+    <button class="nav-btn" data-nav="discover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 4-4 2 2-4z"/></svg><span>Discover</span></button>
+    <button class="nav-btn" data-nav="community"><svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M2 20c1-4 3-6 6-6s5 2 6 6M14 15c4 0 6 2 7 5"/></svg><span>Community</span></button>
+    <button class="nav-btn" data-nav="smartcity"><svg viewBox="0 0 24 24"><path d="M3 21V9l5-3v15M8 21V3l6 3v15M14 21v-8l7-3v11"/><path d="M5 12h1M10 8h1M17 15h1"/></svg><span>City</span></button>
+    <button class="nav-btn" data-nav="merchant"><svg viewBox="0 0 24 24"><path d="M4 9h16l-2-5H6zM5 9v11h14V9"/><path d="M9 20v-6h6v6"/></svg><span>Merchant</span></button>
+  </nav>
+
+  <div class="side-menu" id="sideMenu"><div class="side-panel"><button class="icon-btn" id="closeMenu">←</button><div class="side-logo">GreenLoop</div><button class="side-link active" data-nav="home">⌂ Home</button><button class="side-link" data-nav="route">↗ GreenRoute</button><button class="side-link" data-nav="challenges">◎ Challenges</button><button class="side-link" data-nav="wallet">◇ Rewards Wallet</button><button class="side-link" data-nav="discover">⌖ Discover</button><button class="side-link" data-nav="community">♧ Community</button><button class="side-link" data-nav="smartcity">▥ Smart City</button><button class="side-link" data-nav="merchant">◈ Merchant Portal</button><button class="side-link" data-nav="profile">○ Profile & Impact</button><button class="side-link" id="sideAdmin">▦ Municipal Dashboard</button><div style="position:absolute;bottom:28px;color:var(--dim);font-size:10px">Interactive MVP · Seed data<br>GreenLoop Smart City & Rewards OS</div></div></div>
+  <div class="modal-bg" id="modalBg"><div class="modal"><div class="grab"></div><div id="modalContent"></div></div></div>
+  <div class="live-overlay" id="liveTrip"><div class="topbar"><button class="icon-btn" id="closeLiveTrip">×</button><div class="brand"><b>Trip in progress</b><small id="liveRouteName">Balanced Route</small></div><button class="icon-btn" id="reportIssue">!</button></div><div class="live-map"><div class="map-grid"></div><i class="map-road r1"></i><i class="map-road r2"></i><i class="map-road r3"></i><i class="route-line a"></i><i class="route-line b"></i><i class="pin p1"></i><i class="pin p2"></i></div><div class="live-panel"><div class="live-summary"><div class="trip-progress-ring" id="tripRing"><b id="tripPercent">0%</b></div><div class="copy"><h3 id="liveInstruction">Walk to Reem Central Park stop</h3><p id="liveDetails">2 min · 180 m · +0.2 kg CO₂ saved</p></div></div><div class="card-actions"><button class="secondary-btn" id="rerouteTrip">Reroute</button><button class="primary-btn" id="endTrip">End Trip</button></div></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+<script>
+(function(){
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const STORAGE='greenway_mvp_v1';
+const defaults={
+  started:false,points:420,lifetimePoints:420,carbon:8.4,streak:4,trips:7,rewardsRedeemed:0,rank:28,
+  selectedPriority:'Balanced',selectedRoute:'balanced',previousScreen:'home',savedOpportunity:false,referrals:0,communityJoined:false,academicJoined:false,sponsoredJoined:false,cityReports:0,merchantRedemptions:48,
+  challenges:{transit:{joined:true,progress:2,target:5,claimed:false},walk:{joined:false,progress:1.4,target:5,claimed:false},recycle:{joined:false,progress:0,target:3,claimed:false}},
+  transactions:[
+    {title:'Transit trip verified',date:'Today · 08:20',points:20,type:'plus',icon:'🚌'},
+    {title:'Daily walking goal',date:'Yesterday · 19:10',points:25,type:'plus',icon:'🚶'},
+    {title:'EV charging discount',date:'Jul 30 · 17:40',points:120,type:'minus',icon:'⚡'}
+  ],
+  redeemed:[],notifications:2
+};
+let S=load();
+let current=S.started?'home':'splash';
+let tripTimer=null,tripProgress=0,selectedRouteId=S.selectedRoute||'balanced',rewardFilter='All',sortAscending=true;
+const activities=[
+  {id:'walk',icon:'🚶',name:'Walking',desc:'+5 pts / km',points:15,carbon:.45,challenge:'walk',inc:1},
+  {id:'cycle',icon:'🚲',name:'Cycling',desc:'+6 pts / km',points:24,carbon:.9,challenge:'walk',inc:1.5},
+  {id:'transit',icon:'🚌',name:'Public Transit',desc:'+20 pts / trip',points:20,carbon:1.6,challenge:'transit',inc:1},
+  {id:'ev',icon:'⚡',name:'EV Charging',desc:'+25 pts / charge',points:25,carbon:.8},
+  {id:'recycle',icon:'♻️',name:'Recycling',desc:'+20 pts / drop',points:20,carbon:.55,challenge:'recycle',inc:1},
+  {id:'purchase',icon:'🛍️',name:'Green Purchase',desc:'+15 pts / receipt',points:15,carbon:.3}
+];
+const challengeDefs={
+  transit:{title:'Transit Week',desc:'Use public transport 5 times this week.',reward:150,unit:'trips'},
+  walk:{title:'Move Without Fuel',desc:'Walk or cycle 5 km before Sunday.',reward:100,unit:'km'},
+  recycle:{title:'Recycle Three',desc:'Verify 3 recycling drops in the city.',reward:80,unit:'drops'}
+};
+const rewards=[
+  {id:'bus',category:'Transport',title:'Free Bus Ride',partner:'Abu Dhabi Mobility',cost:180,icon:'🚌'},
+  {id:'ev10',category:'EV',title:'10% EV Charging',partner:'GreenCharge',cost:220,icon:'⚡'},
+  {id:'coffee',category:'Food',title:'Green Coffee',partner:'Root Café',cost:140,icon:'☕'},
+  {id:'market',category:'Retail',title:'AED 10 Voucher',partner:'Eco Market',cost:300,icon:'🛍️'},
+  {id:'metro',category:'Transport',title:'Transit Day Pass',partner:'City Mobility',cost:360,icon:'🎫'},
+  {id:'tree',category:'Retail',title:'Plant a Tree',partner:'Green Abu Dhabi',cost:250,icon:'🌳'}
+];
+const routeBase=[
+  {id:'fast',name:'Fastest Route',modes:'Car + short walk',time:31,cost:28,carbon:4.8,saved:.4,points:8,reliability:84,icon:'🚗'},
+  {id:'green',name:'Greenest Route',modes:'Walk + bus + walk',time:49,cost:4,carbon:.5,saved:4.7,points:45,reliability:91,icon:'🌿'},
+  {id:'balanced',name:'Balanced Route',modes:'Walk + bus + EV shuttle',time:42,cost:7,carbon:1.2,saved:2.6,points:35,reliability:94,icon:'🚌'}
+];
+function load(){try{return {...defaults,...JSON.parse(localStorage.getItem(STORAGE)||'{}')}}catch(e){return structuredClone(defaults)}}
+function save(){localStorage.setItem(STORAGE,JSON.stringify(S))}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2400)}
+function fmt(n){return Number(n).toLocaleString(undefined,{maximumFractionDigits:1})}
+function openScreen(name,keepPrev=false){
+  if(name==='map'||name==='admin'){if(!keepPrev) S.previousScreen=current}
+  current=name;$$('.screen').forEach(x=>x.classList.toggle('active',x.id==='screen-'+name));
+  const navNames=['home','route','challenges','wallet','discover','community','smartcity','merchant'];
+  $('#bottomNav').style.display=navNames.includes(name)?'grid':'none';
+  $$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.nav===name));
+  $('#sideMenu').classList.remove('show');
+  renderAll();save();
+}
+function openModal(html){$('#modalContent').innerHTML=html;$('#modalBg').classList.add('show')}
+function closeModal(){ $('#modalBg').classList.remove('show') }
+$('#modalBg').addEventListener('click',e=>{if(e.target.id==='modalBg') closeModal()});
+
+function injectTopProfiles(){
+  $$('.topbar').forEach(bar=>{
+    if(bar.closest('#screen-profile')||bar.querySelector('.profile-top')) return;
+    const b=document.createElement('button');b.className='profile-top';b.dataset.nav='profile';b.setAttribute('aria-label','Open profile');b.textContent='AK';bar.appendChild(b);
+  });
+}
+
+function bindNav(){
+  $$('[data-nav]').forEach(b=>b.onclick=()=>openScreen(b.dataset.nav));
+  $$('[data-open-menu]').forEach(b=>b.onclick=()=>$('#sideMenu').classList.add('show'));
+  $$('[data-open-map]').forEach(b=>b.onclick=()=>openScreen('map'));
+}
+function renderAll(){updateStats();renderRoutes();renderActivities();renderChallenges();renderRewards();renderTransactions();renderHeatGrid();renderChargers();renderHomeRewards();}
+function updateStats(){
+  ['homePoints','walletPoints'].forEach(id=>$('#'+id).textContent=Math.round(S.points));
+  $('#homeCarbon').textContent=fmt(S.carbon);$('#homeStreak').textContent=S.streak;$('#walletCarbon').textContent=fmt(S.carbon)+' kg CO₂ saved';$('#walletLifetime').textContent=Math.round(S.lifetimePoints)+' lifetime pts';
+  $('#profilePoints').textContent=Math.round(S.points)+' POINTS';$('#profileRank').textContent='#'+S.rank+' CITY';$('#profileTrips').textContent=S.trips;$('#profileCarbon').textContent=fmt(S.carbon);$('#profileRewards').textContent=S.rewardsRedeemed;
+  $('#levelProgress').style.width=Math.min(100,(S.lifetimePoints%500)/5)+'%';$('#notifBadge').textContent=S.notifications;$('#notifBadge').style.display=S.notifications?'grid':'none';
+  const c=S.challenges.transit;$('#homeChallengeText').textContent=fmt(c.progress)+' of '+c.target+' trips';$('#homeChallengeProgress').style.width=Math.min(100,c.progress/c.target*100)+'%';
+  const rc=$('#referralCount');if(rc)rc.textContent=S.referrals||0;const mr=$('#merchantRedemptions');if(mr)mr.textContent=(S.merchantRedemptions||48)+' REDEMPTIONS';
+}
+function routeHash(){const str=$('#originInput').value+$('#destinationInput').value;return [...str].reduce((a,c)=>a+c.charCodeAt(0),0)%7}
+function computedRoutes(){
+  const h=routeHash();return routeBase.map(r=>{let rr={...r};rr.time+=h-3;rr.cost=Math.max(0,rr.cost+(h%3)-1);if(S.selectedPriority==='Greenest'&&r.id==='green')rr.reliability+=3;if(S.selectedPriority==='Fastest'&&r.id==='fast')rr.reliability+=3;if(S.selectedPriority==='Cheapest'&&r.id==='green')rr.cost=Math.max(1,rr.cost-1);return rr})
+}
+function renderRoutes(){const host=$('#routeResults');if(!host)return;const routes=computedRoutes();host.innerHTML=routes.map(r=>`<div class="route-option glass ${r.id===selectedRouteId?'active':''}" data-route="${r.id}"><div class="route-icon">${r.icon}</div><div><h4>${r.name}</h4><p>${r.modes} · AED ${r.cost} · ${r.carbon} kg CO₂</p><div class="route-meta" style="margin-top:6px"><span class="pill">${r.time} min</span><span class="pill green">+${r.points} pts</span><span class="pill">${r.saved} kg saved</span></div></div><div class="route-score"><b>${r.reliability}</b><span>reliability</span></div></div>`).join('');
+  $$('.route-option',host).forEach(el=>el.onclick=()=>{selectedRouteId=el.dataset.route;S.selectedRoute=selectedRouteId;const r=routes.find(x=>x.id===selectedRouteId);$('#mapLabel').textContent=r.name.replace(' Route','')+' route · '+r.time+' min';renderRoutes();save()});
+}
+function renderActivities(){const host=$('#activityGrid');if(!host)return;host.innerHTML=activities.slice(0,4).map(a=>`<button class="activity-card glass" data-activity="${a.id}"><span class="act-icon">${a.icon}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('');$$('[data-activity]',host).forEach(b=>b.onclick=()=>logActivity(b.dataset.activity));}
+function logActivity(id){const a=activities.find(x=>x.id===id);if(!a)return;openModal(`<h3>${a.icon} Log ${a.name}</h3><p>This demo verifies the activity instantly. A live deployment would use GPS, QR, receipt or partner confirmation.</p><div class="route-card glass"><div class="route-title">Verified demo activity</div><div class="route-meta"><span class="pill green">+${a.points} points</span><span class="pill">+${a.carbon} kg CO₂ saved</span></div></div><button class="primary-btn" id="confirmActivity">Verify & Add</button>`);$('#confirmActivity').onclick=()=>{S.points+=a.points;S.lifetimePoints+=a.points;S.carbon=+(S.carbon+a.carbon).toFixed(2);S.transactions.unshift({title:a.name+' verified',date:'Just now',points:a.points,type:'plus',icon:a.icon});if(a.challenge){const c=S.challenges[a.challenge];c.progress=Math.min(c.target,c.progress+(a.inc||1))}save();closeModal();renderAll();toast(a.name+' verified · +'+a.points+' points')};}
+function renderChallenges(){const host=$('#challengeList');if(!host)return;host.innerHTML=Object.entries(challengeDefs).map(([id,d])=>{const c=S.challenges[id],done=c.progress>=c.target;return `<div class="challenge-card glass"><h4>${d.title}</h4><p>${d.desc}</p><div class="challenge-meta"><span>${fmt(c.progress)} / ${c.target} ${d.unit}</span><span>+${d.reward} pts</span></div><div class="progress"><i style="width:${Math.min(100,c.progress/c.target*100)}%"></i></div><div class="card-actions">${!c.joined?`<button class="primary-btn" data-join="${id}">Join Challenge</button>`:done&&!c.claimed?`<button class="primary-btn" data-claim="${id}">Claim Reward</button>`:`<button class="secondary-btn" data-log-for="${id}">${c.claimed?'Completed ✓':'Log Activity'}</button>`}</div></div>`}).join('');
+  $$('[data-join]',host).forEach(b=>b.onclick=()=>{S.challenges[b.dataset.join].joined=true;save();renderChallenges();toast('Challenge joined')});
+  $$('[data-claim]',host).forEach(b=>b.onclick=()=>{const id=b.dataset.claim,c=S.challenges[id],d=challengeDefs[id];if(c.claimed)return;c.claimed=true;S.points+=d.reward;S.lifetimePoints+=d.reward;S.transactions.unshift({title:d.title+' reward',date:'Just now',points:d.reward,type:'plus',icon:'🏆'});save();renderAll();toast('Challenge reward claimed · +'+d.reward)});
+  $$('[data-log-for]',host).forEach(b=>b.onclick=()=>{const id=b.dataset.logFor;if(S.challenges[id].claimed)return;const map={transit:'transit',walk:'walk',recycle:'recycle'};logActivity(map[id])});
+}
+function filteredRewards(){let list=rewards.filter(r=>rewardFilter==='All'||r.category===rewardFilter);if(sortAscending)list.sort((a,b)=>a.cost-b.cost);return list}
+function rewardCard(r){const can=S.points>=r.cost;return `<div class="reward-card glass"><div class="reward-art">${r.icon}</div><h4>${r.title}</h4><p>${r.partner}</p><div class="cost"><b>${r.cost} pts</b><button class="secondary-btn" data-redeem="${r.id}" ${can?'':'disabled style="opacity:.45"'}>Redeem</button></div></div>`}
+function renderRewards(){const host=$('#rewardGrid');if(!host)return;host.innerHTML=filteredRewards().map(rewardCard).join('');$$('[data-redeem]',host).forEach(b=>b.onclick=()=>redeemReward(b.dataset.redeem));}
+function renderHomeRewards(){const host=$('#homeRewards');if(host)host.innerHTML=rewards.slice(0,2).map(rewardCard).join('');$$('[data-redeem]',host).forEach(b=>b.onclick=()=>redeemReward(b.dataset.redeem));}
+function redeemReward(id){const r=rewards.find(x=>x.id===id);if(!r||S.points<r.cost){toast('Not enough points');return}openModal(`<h3>${r.icon} ${r.title}</h3><p>Redeem ${r.cost} Green Points for this reward from ${r.partner}?</p><button class="primary-btn" id="confirmRedeem">Redeem Reward</button>`);$('#confirmRedeem').onclick=()=>{S.points-=r.cost;S.rewardsRedeemed++;S.redeemed.push({id:r.id,code:'GW-'+Math.random().toString(36).slice(2,8).toUpperCase()});S.transactions.unshift({title:r.title,date:'Just now',points:r.cost,type:'minus',icon:r.icon});save();closeModal();renderAll();openModal(`<h3>Reward ready</h3><p>Show this one-time demo voucher to the partner.</p><div class="route-card glass" style="text-align:center"><div style="font-size:34px;letter-spacing:5px;color:var(--lime);font-weight:800">${S.redeemed.at(-1).code}</div></div><button class="primary-btn" id="closeVoucher">Done</button>`);$('#closeVoucher').onclick=closeModal};}
+function renderTransactions(){const host=$('#transactionList');if(!host)return;if(!S.transactions.length){host.innerHTML='<div class="empty">No transactions yet.</div>';return}host.innerHTML=S.transactions.slice(0,8).map(t=>`<div class="row"><div class="tx-icon">${t.icon}</div><div class="tx-copy"><b>${t.title}</b><span>${t.date}</span></div><div class="tx-points ${t.type==='minus'?'minus':''}">${t.type==='minus'?'-':'+'}${t.points}</div></div>`).join('')}
+function startTrip(){const r=computedRoutes().find(x=>x.id===selectedRouteId)||computedRoutes()[2];tripProgress=0;$('#liveRouteName').textContent=r.name;$('#liveTrip').classList.add('show');updateTrip(r);clearInterval(tripTimer);tripTimer=setInterval(()=>{tripProgress=Math.min(100,tripProgress+10);updateTrip(r);if(tripProgress>=100)clearInterval(tripTimer)},900)}
+function updateTrip(r){$('#tripPercent').textContent=tripProgress+'%';$('#tripRing').style.setProperty('--progress',tripProgress+'%');const steps=['Walk to the nearest transit stop','Board the electric bus','Transfer to the EV shuttle','Walk 180 m to destination','Destination reached'];const idx=Math.min(4,Math.floor(tripProgress/25));$('#liveInstruction').textContent=steps[idx];$('#liveDetails').textContent=Math.max(1,Math.round(r.time*(100-tripProgress)/100))+' min remaining · '+(r.saved*tripProgress/100).toFixed(1)+' kg CO₂ saved'}
+function finishTrip(){clearInterval(tripTimer);const r=computedRoutes().find(x=>x.id===selectedRouteId)||computedRoutes()[2];S.points+=r.points;S.lifetimePoints+=r.points;S.carbon=+(S.carbon+r.saved).toFixed(2);S.trips++;if(r.id!=='fast')S.challenges.transit.progress=Math.min(S.challenges.transit.target,S.challenges.transit.progress+1);S.transactions.unshift({title:r.name+' completed',date:'Just now',points:r.points,type:'plus',icon:r.icon});save();$('#liveTrip').classList.remove('show');renderAll();openModal(`<h3>Trip completed</h3><p>Your low-carbon trip was verified.</p><div class="stats"><div class="stat glass"><b>+${r.points}</b><span>Points</span></div><div class="stat glass"><b>${r.saved}</b><span>kg CO₂ saved</span></div><div class="stat glass"><b>${r.time}</b><span>Minutes</span></div></div><button class="primary-btn" id="tripDone">Collect & Continue</button>`);$('#tripDone').onclick=closeModal}
+function renderHeatGrid(){const h=$('#heatGrid');if(!h)return;const vals=[.12,.18,.22,.14,.30,.42,.55,.20,.28,.36,.62,.78,.55,.32,.12,.15,.33,.71,.86,.64,.39,.08,.17,.25,.44,.73,.58,.28,.10,.21,.31,.48,.60,.43,.18];h.innerHTML=vals.map(v=>`<i class="heat-cell" style="--heat:${v}"></i>`).join('')}
+function renderChargers(){const h=$('#chargerList');if(!h)return;const data=[['Masdar South Hub',92,'3.8 km gap'],['Reem Transit Centre',86,'High commuter demand'],['Yas Retail District',79,'Strong commercial activity']];h.innerHTML=data.map((x,i)=>`<div class="route-option glass"><div class="route-icon">⚡</div><div><h4>${x[0]}</h4><p>${x[2]} · 150 kW candidate</p></div><div class="route-score"><b>${x[1]}</b><span>site score</span></div></div>`).join('')}
+function exportData(){const blob=new Blob([JSON.stringify({product:'GreenLoop MVP',exportedAt:new Date().toISOString(),user:{points:S.points,carbonSaved:S.carbon,trips:S.trips,rewards:S.redeemed},transactions:S.transactions,challenges:S.challenges},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='greenloop-impact-report.json';a.click();URL.revokeObjectURL(a.href);toast('Impact report downloaded')}
+
+$('#getStarted').onclick=()=>{S.started=true;save();openScreen('home')};
+$('#closeMenu').onclick=()=>$('#sideMenu').classList.remove('show');$('#sideMenu').onclick=e=>{if(e.target.id==='sideMenu')$('#sideMenu').classList.remove('show')};
+$('#mapBack').onclick=()=>openScreen(S.previousScreen||'home',true);$('#adminBack').onclick=()=>openScreen(S.previousScreen||'profile',true);$('#sideAdmin').onclick=()=>openScreen('admin');$('#openCityDashboard').onclick=()=>openScreen('admin');
+$('#findRoutesBtn').onclick=()=>{renderRoutes();const r=computedRoutes().find(x=>x.id===selectedRouteId);$('#mapLabel').textContent=r.name.replace(' Route','')+' route · '+r.time+' min';toast('3 live demo routes calculated')};
+$$('[data-priority]').forEach(b=>b.onclick=()=>{S.selectedPriority=b.dataset.priority;$$('[data-priority]').forEach(x=>x.classList.toggle('active',x===b));renderRoutes();save()});
+$('#locateBtn').onclick=()=>{$('#originInput').value='My Current Location';toast('Demo location set to Al Reem Island')};
+$('#startSelectedTrip').onclick=startTrip;$('#quickStartTrip').onclick=()=>{selectedRouteId='balanced';startTrip()};$('#endTrip').onclick=finishTrip;$('#closeLiveTrip').onclick=()=>{$('#liveTrip').classList.remove('show');clearInterval(tripTimer)};$('#rerouteTrip').onclick=()=>{tripProgress=Math.max(0,tripProgress-10);toast('Route recalculated around congestion')};$('#reportIssue').onclick=()=>openModal('<h3>Report an issue</h3><p>Select an issue to help improve city mobility data.</p><div class="chips"><button class="chip active" id="issueDelay">Delay</button><button class="chip" id="issueClosure">Road closure</button><button class="chip" id="issueAccess">Accessibility</button></div><button class="primary-btn" id="sendIssue">Send Report</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='sendIssue'){closeModal();toast('Issue sent to the mobility team')}});
+$('#scanQrBtn').onclick=()=>openModal('<h3>▦ Scan Green QR</h3><p>Demo scanner: verify a recycling station or partner purchase.</p><div class="route-card glass" style="text-align:center;font-size:70px">▦</div><button class="primary-btn" id="demoScan">Simulate QR Scan</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='demoScan'){closeModal();logActivity('recycle')}});
+$('#activityModalBtn').onclick=$('#showAllActivity').onclick=()=>openModal(`<h3>Log a green activity</h3><p>Choose one activity to verify in demo mode.</p><div class="activity-grid">${activities.map(a=>`<button class="activity-card glass" data-modal-activity="${a.id}"><span class="act-icon">${a.icon}</span><b>${a.name}</b><small>${a.desc}</small></button>`).join('')}</div>`);
+$('#modalContent').addEventListener('click',e=>{const b=e.target.closest('[data-modal-activity]');if(b){closeModal();setTimeout(()=>logActivity(b.dataset.modalActivity),80)}});
+$('#refreshChallenges').onclick=()=>{renderChallenges();toast('Challenge status refreshed')};
+$$('#rewardFilters .chip').forEach(b=>b.onclick=()=>{rewardFilter=b.dataset.filter;$$('#rewardFilters .chip').forEach(x=>x.classList.toggle('active',x===b));renderRewards()});
+$('#sortRewards').onclick=()=>{sortAscending=!sortAscending;$('#sortRewards').textContent=sortAscending?'Sort by points':'Highest first';renderRewards()};
+$('#clearTransactions').onclick=()=>{S.transactions=[];save();renderTransactions();toast('Transaction list cleared')};
+$('#walletInfo').onclick=()=>openModal('<h3>Green Points</h3><p>Points are a city engagement reward, not money or an investment asset. They can only be redeemed with participating partners.</p><button class="primary-btn" id="closeInfo">Understood</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='closeInfo')closeModal()});
+$('#notifBtn').onclick=()=>{S.notifications=0;save();updateStats();openModal('<h3>Notifications</h3><p>Transit Week ends in 3 days.<br><br>A new EV charging reward is available near Masdar City.</p><button class="primary-btn" id="closeNotif">Done</button>')};
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='closeNotif')closeModal()});
+$('#settingsBtn').onclick=()=>openModal('<h3>Settings</h3><p>Demo settings are stored locally in your browser.</p><div class="field"><span>City</span><select><option>Abu Dhabi</option><option>Dubai</option><option>Riyadh</option></select></div><button class="primary-btn" id="saveSettings">Save Settings</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='saveSettings'){closeModal();toast('Settings saved')}});
+$('#badgeInfo').onclick=()=>openModal('<h3>Badge rules</h3><p>Complete verified trips, recycling drops, EV charges and city challenges to unlock badges.</p><button class="primary-btn" id="closeBadge">Done</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='closeBadge')closeModal()});
+$('#exportImpact').onclick=exportData;$('#resetDemo').onclick=()=>openModal('<h3>Reset demo?</h3><p>This will remove your local progress and restore the original MVP state.</p><button class="primary-btn" id="confirmReset">Reset Data</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='confirmReset'){localStorage.removeItem(STORAGE);S=structuredClone(defaults);closeModal();renderAll();toast('Demo data reset')}});
+$('#centerMap').onclick=()=>toast('Map centered on Abu Dhabi');
+$$('#mapFilters .chip').forEach(b=>b.onclick=()=>{const layer=b.dataset.layer;if(layer==='all'){$$('#mapFilters .chip').forEach(x=>x.classList.add('active'));$$('[data-layer-pin]').forEach(x=>x.style.display='grid');$$('[data-heat]').forEach(x=>x.style.display='block')}else{b.classList.toggle('active');$$(`[data-layer-pin="${layer}"]`).forEach(x=>x.style.display=b.classList.contains('active')?'grid':'none');if(layer==='heat')$$('[data-heat]').forEach(x=>x.style.display=b.classList.contains('active')?'block':'none')}const count=$$('[data-layer-pin]').filter(x=>x.style.display!=='none').length;$('#greenMapLabel').textContent=(count*3)+' green locations nearby'});
+$('#saveCityOpportunity').onclick=()=>{S.savedOpportunity=true;save();toast('EV opportunity saved to city workspace')};
+$('#adminRefresh').onclick=()=>{$('#adminTrips').textContent=(12.8+Math.random()*.3).toFixed(1)+'K';$('#adminCarbon').textContent=(18.6+Math.random()*.5).toFixed(1)+'t';toast('Municipal dashboard refreshed')};
+$('#heatRandomize').onclick=()=>{$$('.heat-cell').forEach(x=>x.style.setProperty('--heat',(Math.random()*.8+.08).toFixed(2)));toast('Heatmap updated')};
+$('#modeToggle').onclick=()=>{$('#modeToggle').textContent=$('#modeToggle').textContent==='Weekly'?'Monthly':'Weekly';toast('Mode-share period changed')};
+$('#compareChargers').onclick=()=>openModal('<h3>EV site comparison</h3><p>Masdar South Hub leads with a score of 92 due to charger scarcity, commuter demand and grid access.</p><button class="primary-btn" id="closeCompare">Done</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='closeCompare')closeModal()});
+$('#newCampaign').onclick=()=>openModal('<h3>Create city campaign</h3><div class="field"><input id="campaignName" placeholder="Campaign name" value="Car-Free Friday"></div><div class="field"><input id="campaignReward" type="number" value="100" placeholder="Reward points"></div><button class="primary-btn" id="createCampaign">Launch Demo Campaign</button>');
+$('#modalContent').addEventListener('click',e=>{if(e.target.id==='createCampaign'){const name=$('#campaignName').value||'New Campaign';$('#campaignCard').innerHTML=`<h4 style="margin:0 0 6px">${name}</h4><p style="font-size:11px;color:var(--muted)">Campaign launched · 0 citizens joined · 100 point reward</p><div class="progress"><i style="width:2%"></i></div>`;closeModal();toast('Campaign launched')}});
+injectTopProfiles();
+
+// Discovery
+$('#discoverStores').onclick=()=>openModal('<h3>Green stores nearby</h3><p>12 verified partners offer points, refill services and low-waste products within 5 km.</p><button class="primary-btn" id="discDone">View on Green Map</button>');
+$('#discoverEvents').onclick=()=>openModal('<h3>Green events</h3><p>Urban Garden Weekend, E-Waste Drop Day and the Reem Cycling Challenge are open this week.</p><button class="primary-btn" id="discClose">Done</button>');
+$('#discoverEcoRoutes').onclick=()=>openScreen('route');$('#discoverNavigate').onclick=()=>openScreen('route');$('#discoverSave').onclick=()=>toast('Location saved');
+$('#joinGreenEvent').onclick=()=>{S.points+=20;S.lifetimePoints+=20;save();renderAll();toast('Event joined · +20 early-action points')};
+
+// Community
+function copyReferral(){const link='https://t.me/greenway_demo_bot?start=armin';if(navigator.clipboard)navigator.clipboard.writeText(link);openModal('<h3>Referral link ready</h3><p>'+link+'</p><button class="primary-btn" id="refDone">Copied</button>')}
+$('#copyReferral').onclick=copyReferral;$('#communityInviteTop').onclick=copyReferral;
+$('#simulateReferral').onclick=()=>{S.referrals=(S.referrals||0)+1;S.points+=100;S.lifetimePoints+=100;S.transactions.unshift({title:'Verified referral reward',date:'Just now',points:100,type:'plus',icon:'⇧'});save();renderAll();toast('Friend completed first action · +100 points')};
+$('#joinGreenCommunity').onclick=()=>{S.communityJoined=true;save();toast('Joined Reem Green Community')};
+$('#viewCommunityBoard').onclick=()=>openModal('<h3>Neighbourhood leaderboard</h3><p>1. Masdar · 18,240 pts<br>2. Al Reem · 16,880 pts<br>3. Yas · 13,420 pts</p><button class="primary-btn" id="boardDone">Done</button>');
+$('#joinAcademic').onclick=()=>{S.academicJoined=true;save();toast('Joined Academic & University Network')};
+$('#academicProjects').onclick=()=>openModal('<h3>Campus projects</h3><p>Solar Shade Lab, Zero-Waste Campus and AI Mobility Research are accepting collaborators.</p><button class="primary-btn" id="academicDone">Done</button>');
+$('#joinSponsored').onclick=()=>{S.sponsoredJoined=true;save();toast('Joined Car-Free Friday campaign')};
+$('#sponsorInfo').onclick=()=>openModal('<h3>Sponsored campaigns</h3><p>Brands fund rewards while the platform measures verified participation, visits and avoided emissions.</p><button class="primary-btn" id="sponsorDone">Done</button>');
+
+// Smart City
+$('#smartCityDashboard').onclick=()=>openScreen('admin');
+$('#reportCityIssue').onclick=()=>openModal('<h3>Report a city problem</h3><div class="field"><select id="cityIssueType"><option>Broken streetlight</option><option>Waste or smart-bin issue</option><option>Water leak</option><option>Unsafe cycling route</option><option>EV charger fault</option><option>Accessibility issue</option></select></div><div class="field"><input id="cityIssueNote" placeholder="Describe the problem"></div><button class="primary-btn" id="submitCityIssue">Submit Report</button>');
+$('#myCityReports').onclick=()=>openModal('<h3>My city reports</h3><p>'+(S.cityReports||0)+' reports submitted. Demo reports are marked as received by the municipal service desk.</p><button class="primary-btn" id="reportsDone">Done</button>');
+$('#runPropTech').onclick=()=>openModal('<h3>Green PropTech AI</h3><p><b>Masdar South Investment Signal: 84/100</b><br><br>Strong transit access, charger shortage, green-building demand and lower heat exposure. Main risk: high near-term land pricing.</p><button class="primary-btn" id="savePropTech">Save Opportunity</button>');
+$('#propTechWatchlist').onclick=()=>toast(S.savedOpportunity?'1 green property opportunity saved':'Watchlist is empty');
+$('#scanSmartBin').onclick=()=>logActivity('recycle');
+$('#bookEWaste').onclick=()=>openModal('<h3>E-waste pickup</h3><p>Demo booking: Tuesday, 10:00–12:00, Al Reem Island.</p><button class="primary-btn" id="confirmEWaste">Confirm Booking</button>');
+$('#browseCourses').onclick=()=>openModal('<h3>ScienceTech courses</h3><p>Green Building Basics · Carbon Reporting · Smart Waste Operations · Urban Heat Mitigation</p><button class="primary-btn" id="courseDone">Start Course</button>');
+$('#certificateStatus').onclick=()=>openModal('<h3>Certificate progress</h3><p>Green Building Foundation: 60% complete. Finish two modules and the assessment to issue the demo certificate.</p><button class="primary-btn" id="certDone">Continue Learning</button>');
+$('#openGreenFinance').onclick=()=>openModal('<h3>Green Finance Wallet</h3><p>Demo options: mobility cashback, employer commute credit and opt-in micro-savings for verified local climate projects.</p><button class="primary-btn" id="financeDone">Activate Demo Wallet</button>');
+$('#fintechRules').onclick=()=>openModal('<h3>Green FinTech rules</h3><p>Green Points are non-cash rewards. Financial products require licensed partners, user consent, KYC and separate regulated accounts.</p><button class="primary-btn" id="rulesDone">Understood</button>');
+
+// Merchant Portal
+$('#merchantSettings').onclick=$('#editMerchantProfile').onclick=()=>toast('Merchant profile editor opened in demo mode');
+$('#createMerchantOffer').onclick=()=>openModal('<h3>Create merchant offer</h3><div class="field"><input id="merchantOfferTitle" value="15% off reusable cups"></div><div class="field"><input id="merchantOfferCost" type="number" value="120"></div><button class="primary-btn" id="publishMerchantOffer">Publish Offer</button>');
+$('#manageMerchantOffers').onclick=()=>openModal('<h3>Active offers</h3><p>Reusable Cup Discount · 42 redemptions<br>Plant-Based Lunch · 18 redemptions</p><button class="primary-btn" id="offersDone">Done</button>');
+$('#merchantScan').onclick=()=>openModal('<h3>Scan customer voucher</h3><div class="route-card glass" style="text-align:center;font-size:68px">▦</div><button class="primary-btn" id="verifyMerchantVoucher">Simulate Scan</button>');
+$('#redemptionHistory').onclick=()=>openModal('<h3>Redemption history</h3><p>48 verified vouchers · 0 duplicate attempts · 18% offer conversion.</p><button class="primary-btn" id="historyDone">Done</button>');
+$('#merchantCampaign').onclick=()=>openModal('<h3>Campaign builder</h3><p>Sponsor a verified walking, transit or recycling challenge and define budget, audience and reward inventory.</p><button class="primary-btn" id="launchMerchantCampaign">Launch Demo Campaign</button>');
+$('#merchantCertification').onclick=()=>openModal('<h3>Green certification</h3><p>Current level: Gold. Next actions: packaging audit, electricity baseline and staff course completion.</p><button class="primary-btn" id="assessmentDone">Open Assessment</button>');
+
+// Delegated modal actions for new modules
+$('#modalContent').addEventListener('click',e=>{
+  if(e.target.id==='submitCityIssue'){S.cityReports=(S.cityReports||0)+1;S.points+=15;S.lifetimePoints+=15;save();closeModal();renderAll();toast('City report submitted · +15 points')}
+  if(e.target.id==='savePropTech'){S.savedOpportunity=true;save();closeModal();toast('PropTech opportunity saved')}
+  if(e.target.id==='confirmEWaste'){closeModal();toast('E-waste pickup booked')}
+  if(e.target.id==='publishMerchantOffer'){closeModal();toast('Merchant offer published')}
+  if(e.target.id==='verifyMerchantVoucher'){S.merchantRedemptions=(S.merchantRedemptions||48)+1;save();closeModal();renderAll();toast('Voucher verified successfully')}
+  if(e.target.id==='launchMerchantCampaign'){closeModal();toast('Sponsored campaign launched')}
+  if(['discDone'].includes(e.target.id)){closeModal();openScreen('map')}
+  if(['discClose','refDone','boardDone','academicDone','sponsorDone','reportsDone','courseDone','certDone','financeDone','rulesDone','offersDone','historyDone','assessmentDone'].includes(e.target.id))closeModal();
+});
+
+
+
+/* ===== Rich module option engine ===== */
+const MODULE_OPTIONS = {"discover-ev": [{"icon": "⚡", "name": "Masdar Fast-Charge Hub", "meta": "4 chargers available · 2.4 km", "points": 25, "trend": "+18%", "chart": [32, 49, 58, 43, 76, 92]}, {"icon": "⚡", "name": "Yas Mall Charge Lounge", "meta": "8 chargers · retail reward", "points": 35, "trend": "+26%", "chart": [28, 41, 55, 67, 74, 88]}, {"icon": "⚡", "name": "Reem Community Charger", "meta": "2 chargers · low congestion", "points": 20, "trend": "+11%", "chart": [18, 29, 36, 47, 55, 71]}], "discover-event": [{"icon": "🌿", "name": "Urban Garden Weekend", "meta": "Saturday · QR attendance", "points": 120, "trend": "+31%", "chart": [21, 35, 30, 52, 68, 83]}, {"icon": "♻", "name": "E-Waste Drop Day", "meta": "Thursday · electronics collection", "points": 90, "trend": "+17%", "chart": [14, 24, 39, 48, 59, 76]}, {"icon": "🚲", "name": "Reem Cycling Challenge", "meta": "Sunday · 8 km group ride", "points": 140, "trend": "+34%", "chart": [17, 31, 44, 58, 72, 91]}], "referral": [{"icon": "⇧", "name": "Invite 1 verified friend", "meta": "First green action required", "points": 100, "trend": "+28%", "chart": [12, 24, 31, 47, 63, 84]}, {"icon": "⇧", "name": "Build a 5-person circle", "meta": "All members complete one action", "points": 650, "trend": "+42%", "chart": [8, 19, 33, 52, 73, 95]}, {"icon": "⇧", "name": "Campus referral sprint", "meta": "Invite 3 university members", "points": 380, "trend": "+35%", "chart": [15, 29, 42, 61, 78, 90]}], "green-community": [{"icon": "🌱", "name": "Reem Beach Clean-up", "meta": "Neighbourhood mission · Saturday", "points": 85, "trend": "+19%", "chart": [28, 36, 42, 59, 71, 88]}, {"icon": "🌳", "name": "Masdar Shade Mapping", "meta": "Map heat and missing shade", "points": 110, "trend": "+23%", "chart": [22, 34, 47, 63, 72, 86]}, {"icon": "🚶", "name": "Corniche Walkability Audit", "meta": "Verify accessibility points", "points": 95, "trend": "+16%", "chart": [19, 31, 46, 57, 69, 79]}], "academic": [{"icon": "🎓", "name": "Masdar Campus Mobility Lab", "meta": "Research collaboration · 4 weeks", "points": 180, "trend": "+22%", "chart": [18, 29, 41, 49, 66, 79]}, {"icon": "☀", "name": "Solar Shade Design Sprint", "meta": "Student prototype challenge", "points": 220, "trend": "+27%", "chart": [21, 36, 48, 63, 74, 89]}, {"icon": "📊", "name": "Campus Carbon Data Team", "meta": "Publish a verified dataset", "points": 200, "trend": "+24%", "chart": [13, 28, 43, 58, 72, 85]}], "sponsored": [{"icon": "✦", "name": "Car-Free Friday", "meta": "Sponsor: City Mobility Fund", "points": 150, "trend": "68%", "chart": [24, 35, 49, 58, 68, 81]}, {"icon": "♻", "name": "Recycle & Recharge", "meta": "Sponsor: Green retail partner", "points": 130, "trend": "61%", "chart": [18, 29, 40, 53, 61, 74]}, {"icon": "⚡", "name": "EV Off-Peak Challenge", "meta": "Sponsor: Charging operator", "points": 170, "trend": "72%", "chart": [20, 33, 47, 60, 72, 86]}], "urban-report": [{"icon": "💧", "name": "Report a water leak", "meta": "GPS + photo verification", "points": 15, "trend": "92%", "chart": [38, 47, 56, 68, 82, 92]}, {"icon": "💡", "name": "Report a broken streetlight", "meta": "Location and night photo", "points": 12, "trend": "88%", "chart": [29, 41, 55, 66, 77, 88]}, {"icon": "♿", "name": "Report an accessibility issue", "meta": "Route and obstruction details", "points": 20, "trend": "84%", "chart": [23, 36, 49, 62, 73, 84]}], "proptech": [{"icon": "⌂", "name": "Masdar South Growth Zone", "meta": "Mobility + heat + green supply", "points": 40, "trend": "+16%", "chart": [42, 55, 51, 68, 76, 84]}, {"icon": "⌂", "name": "Al Reem Retrofit Cluster", "meta": "High retrofit demand · medium risk", "points": 35, "trend": "+11%", "chart": [35, 42, 54, 61, 70, 78]}, {"icon": "⌂", "name": "Yas Transit-Oriented Zone", "meta": "Strong access · high land cost", "points": 45, "trend": "+19%", "chart": [39, 50, 57, 65, 79, 87]}], "recycletech": [{"icon": "♻", "name": "Smart Bin QR · Al Reem", "meta": "Mixed recyclables · 0.8 km", "points": 20, "trend": "+37%", "chart": [19, 27, 39, 51, 69, 86]}, {"icon": "🔋", "name": "E-Waste Pickup Booking", "meta": "Electronics and batteries", "points": 45, "trend": "+24%", "chart": [14, 23, 37, 48, 61, 75]}, {"icon": "🧴", "name": "Refill Station Check-in", "meta": "Verified packaging avoided", "points": 18, "trend": "+18%", "chart": [16, 26, 34, 45, 57, 68]}], "sciencetech": [{"icon": "◇", "name": "Green Building Foundation", "meta": "4 modules + assessment", "points": 60, "trend": "60%", "chart": [10, 22, 34, 46, 55, 60]}, {"icon": "◇", "name": "Carbon Reporting Certificate", "meta": "Business reporting pathway", "points": 90, "trend": "42%", "chart": [8, 15, 23, 31, 37, 42]}, {"icon": "◇", "name": "Urban Heat Mitigation", "meta": "Design and operations course", "points": 75, "trend": "51%", "chart": [9, 18, 29, 38, 46, 51]}], "fintech": [{"icon": "₣", "name": "Mobility Micro-Savings", "meta": "Save AED 1 after green trips", "points": 25, "trend": "+24%", "chart": [14, 21, 33, 46, 62, 78]}, {"icon": "₣", "name": "Employer Commute Credit", "meta": "Monthly sustainable travel credit", "points": 40, "trend": "+31%", "chart": [12, 24, 38, 51, 69, 84]}, {"icon": "₣", "name": "Green Cashback Wallet", "meta": "Partner-funded verified cashback", "points": 30, "trend": "+27%", "chart": [11, 19, 32, 44, 59, 76]}], "merchant-profile": [{"icon": "◈", "name": "Add sustainability evidence", "meta": "Energy, waste and packaging proof", "points": 40, "trend": "+12%", "chart": [35, 42, 49, 60, 72, 82]}, {"icon": "◈", "name": "Verify second location", "meta": "Location and operating details", "points": 30, "trend": "+8%", "chart": [28, 35, 44, 53, 63, 71]}, {"icon": "◈", "name": "Publish impact statement", "meta": "Customer-facing verified summary", "points": 25, "trend": "+6%", "chart": [21, 29, 37, 45, 56, 64]}], "merchant-offer": [{"icon": "%", "name": "15% off reusable cups", "meta": "120 points · 100 inventory", "points": 30, "trend": "+6%", "chart": [8, 11, 13, 15, 17, 18]}, {"icon": "%", "name": "Plant-based lunch reward", "meta": "180 points · weekday offer", "points": 45, "trend": "+9%", "chart": [6, 9, 12, 16, 20, 24]}, {"icon": "%", "name": "Refill bonus hour", "meta": "80 points · 2-hour window", "points": 25, "trend": "+7%", "chart": [5, 8, 10, 13, 17, 21]}], "merchant-qr": [{"icon": "▦", "name": "Verify 1 customer voucher", "meta": "One-time secure redemption", "points": 15, "trend": "+21%", "chart": [4, 6, 5, 8, 10, 13]}, {"icon": "▦", "name": "Batch event validation", "meta": "Validate up to 20 attendee codes", "points": 50, "trend": "+29%", "chart": [8, 12, 16, 19, 24, 31]}, {"icon": "▦", "name": "Staff QR training", "meta": "Complete fraud-prevention tutorial", "points": 35, "trend": "+14%", "chart": [3, 5, 7, 9, 12, 15]}], "merchant-campaign": [{"icon": "✦", "name": "Transit Bonus Campaign", "meta": "AED 2,500 budget · 30 days", "points": 100, "trend": "68%", "chart": [15, 26, 37, 49, 58, 68]}, {"icon": "✦", "name": "Reusable Cup Week", "meta": "AED 1,200 budget · 7 days", "points": 75, "trend": "74%", "chart": [18, 29, 42, 55, 66, 74]}, {"icon": "✦", "name": "Neighbourhood Clean-up Sponsor", "meta": "AED 3,000 · community mission", "points": 120, "trend": "59%", "chart": [11, 22, 34, 47, 53, 59]}], "merchant-cert": [{"icon": "✓", "name": "Packaging & Energy Audit", "meta": "Next Gold-to-Champion action", "points": 80, "trend": "+9%", "chart": [32, 45, 51, 60, 68, 74]}, {"icon": "✓", "name": "Staff Sustainability Course", "meta": "6 staff members required", "points": 65, "trend": "+12%", "chart": [24, 35, 43, 52, 63, 71]}, {"icon": "✓", "name": "Waste Baseline Submission", "meta": "30-day verified material data", "points": 70, "trend": "+10%", "chart": [21, 31, 42, 55, 64, 73]}]};
+S.moduleSelections = S.moduleSelections || {};
+const MODULE_CHART_TYPES={
+  'discover-ev':'gauge','discover-event':'line','referral':'funnel','green-community':'area',
+  'academic':'donut','sponsored':'stacked','urban-report':'progress','proptech':'radar',
+  'recycletech':'ring','sciencetech':'steps','fintech':'spark','merchant-profile':'score',
+  'merchant-offer':'columns','merchant-qr':'dots','merchant-campaign':'donut','merchant-cert':'gauge'
+};
+function chartPoints(values,w=100,h=40,pad=3){
+  const min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
+  return values.map((v,i)=>{
+    const x=pad+i*((w-pad*2)/Math.max(1,values.length-1));
+    const y=h-pad-((v-min)/span)*(h-pad*2);
+    return [Number(x.toFixed(2)),Number(y.toFixed(2))];
+  });
+}
+function renderModuleChart(card,key,values){
+  const el=card.querySelector('[data-module-chart]'); if(!el)return;
+  const type=MODULE_CHART_TYPES[key]||'columns';
+  const vals=(values&&values.length?values:[20,35,50,45,70,85]).map(Number);
+  el.className='mini-chart chart-'+type;
+  const avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  if(type==='line'||type==='spark'||type==='area'){
+    const pts=chartPoints(vals), line=pts.map(p=>p.join(',')).join(' '), area=`3,40 ${line} 97,40`;
+    el.innerHTML=`<svg viewBox="0 0 100 40" preserveAspectRatio="none"><defs><linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8f99b" stop-opacity=".45"/><stop offset="1" stop-color="#8ee0ae" stop-opacity="0"/></linearGradient></defs><path class="gridline" d="M0 10H100M0 20H100M0 30H100"/>${type==='area'?`<polygon class="chart-area" points="${area}"/>`:''}<polyline class="chart-line" points="${line}"/>${type==='spark'?pts.map(p=>`<circle class="chart-dot" cx="${p[0]}" cy="${p[1]}" r="1.6"/>`).join(''):''}</svg>`;
+  }else if(type==='donut'||type==='ring'){
+    const p=Math.max(8,Math.min(96,vals[vals.length-1]));
+    el.innerHTML=`<div class="donut-wrap" style="--p:${p}"><b>${p}%</b></div>`;
+  }else if(type==='gauge'){
+    const p=Math.max(8,Math.min(100,vals[vals.length-1]));
+    el.innerHTML=`<div class="gauge-shell" style="--p:${p}"><b>${p}</b></div>`;
+  }else if(type==='funnel'){
+    const max=Math.max(...vals);
+    el.innerHTML=vals.slice(0,5).map((v,i)=>`<i style="width:${Math.max(28,Math.round(v/max*100))}%;opacity:${1-i*.1}"></i>`).join('');
+  }else if(type==='stacked'){
+    const total=vals.slice(0,4).reduce((a,b)=>a+b,0)||1;
+    el.innerHTML=`<div class="stack">${vals.slice(0,4).map((v,i)=>`<i style="width:${v/total*100}%;background:${i%2?'var(--lime)':'var(--mint)'};opacity:${.45+i*.15}"></i>`).join('')}</div>`;
+  }else if(type==='progress'){
+    el.innerHTML=vals.slice(-3).map((v,i)=>`<div class="progress-row"><span>${['O','P','R'][i]}</span><div class="track"><div class="fill" style="width:${Math.min(100,v)}%"></div></div><b>${v}</b></div>`).join('');
+  }else if(type==='radar'){
+    const c=[25,25],n=5,r=20;
+    const outer=Array.from({length:n},(_,i)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [c[0]+r*Math.cos(a),c[1]+r*Math.sin(a)]});
+    const data=Array.from({length:n},(_,i)=>{const a=-Math.PI/2+i*2*Math.PI/n,rr=r*(Math.min(100,vals[i]||avg)/100);return [c[0]+rr*Math.cos(a),c[1]+rr*Math.sin(a)]});
+    el.innerHTML=`<svg viewBox="0 0 50 50"><polygon class="radar-grid" points="${outer.map(p=>p.join(',')).join(' ')}"/><polygon class="radar-grid" points="${outer.map(p=>[(p[0]+25)/2,(p[1]+25)/2].join(',')).join(' ')}"/><polygon class="radar-shape" points="${data.map(p=>p.join(',')).join(' ')}"/></svg>`;
+  }else if(type==='steps'){
+    el.innerHTML=vals.map((v,i)=>`<i style="height:${Math.max(12,v)}%;width:${8+i*1.5}px"></i>`).join('');
+  }else if(type==='dots'){
+    el.innerHTML=vals.map(v=>`<i style="--s:${Math.max(1,Math.round(v/18))}"></i>`).join('');
+  }else if(type==='score'){
+    el.innerHTML=vals.slice(-3).map((v,i)=>`<div class="score-col"><i style="height:${Math.min(100,v)}%"></i><span>${v}</span></div>`).join('');
+  }else{
+    el.classList.add('chart-columns');
+    el.innerHTML=vals.map(v=>`<i style="height:${Math.max(8,v)}%"></i>`).join('');
+  }
+}
+function syncRichModules(){
+  document.querySelectorAll('[data-module-card]').forEach(card=>{
+    const key=card.dataset.moduleCard, opts=MODULE_OPTIONS[key]||[];
+    const idx=Math.min(S.moduleSelections[key]||0, Math.max(0,opts.length-1));
+    if(opts[idx]) applyModuleOption(card,key,idx,false);
+  });
+}
+function applyModuleOption(card,key,idx,persist=true){
+  const opt=(MODULE_OPTIONS[key]||[])[idx]; if(!opt||!card)return;
+  const name=card.querySelector('[data-choice-name]'), pts=card.querySelector('[data-choice-points]'), trend=card.querySelector('[data-module-trend]');
+  if(name)name.textContent=opt.name;if(pts)pts.textContent='+'+opt.points+' pts';if(trend)trend.textContent=opt.trend;
+  renderModuleChart(card,key,opt.chart);
+  if(persist){S.moduleSelections[key]=idx;save();toast(opt.name+' selected')}
+}
+function openModuleOptions(key){
+  const opts=MODULE_OPTIONS[key]||[]; const selected=S.moduleSelections[key]||0;
+  openModal(`<h3>More choices</h3><p>Select a real option. The selected choice, chart and point value will update on the card.</p><div class="option-list">${opts.map((o,i)=>`<button class="option-row ${i===selected?'selected':''}" data-option-key="${key}" data-option-index="${i}"><span class="opt-icon">${o.icon}</span><span class="opt-copy"><b>${o.name}</b><span>${o.meta}</span></span><span class="opt-points">+${o.points} pts</span></button>`).join('')}</div><button class="secondary-btn" style="width:100%" id="closeModuleOptions">Close</button>`)
+}
+document.addEventListener('click',e=>{
+  const more=e.target.closest('[data-module-more]');if(more)openModuleOptions(more.dataset.moduleMore);
+  const pick=e.target.closest('[data-option-key]');if(pick){const key=pick.dataset.optionKey,idx=Number(pick.dataset.optionIndex),card=document.querySelector(`[data-module-card="${key}"]`);applyModuleOption(card,key,idx,true);closeModal();}
+  if(e.target.id==='closeModuleOptions')closeModal();
+});
+const _renderAllRich=renderAll;renderAll=function(){_renderAllRich();syncRichModules();};
+
+bindNav();renderAll();openScreen(current,true);
+})();
+</script>
+<a href="../index.html" aria-label="Back to GreenLoop website" style="position:fixed;left:14px;top:14px;z-index:9999;width:34px;height:34px;border-radius:12px;background:rgba(11,33,24,.82);border:1px solid rgba(216,249,155,.25);color:#d8f99b;text-decoration:none;display:grid;place-items:center;font:700 17px system-ui;backdrop-filter:blur(12px)">↙</a>
+</body>
+</html>

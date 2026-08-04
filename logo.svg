@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="GreenLoop logo">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8f99b"/><stop offset="1" stop-color="#63d69b"/></linearGradient></defs>
+<rect width="256" height="256" rx="64" fill="#0b2118"/>
+<path d="M182 54c-65 5-108 37-108 91 0 35 27 59 60 59 43 0 71-34 68-78-2-26-10-49-20-72Z" fill="none" stroke="url(#g)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M75 181c30-42 64-67 109-84" fill="none" stroke="url(#g)" stroke-width="14" stroke-linecap="round"/>
+<path d="M93 77c-22 14-37 38-37 65 0 46 36 82 82 82 24 0 45-10 60-26" fill="none" stroke="#f3f7f1" stroke-opacity=".86" stroke-width="12" stroke-linecap="round"/>
+</svg>
