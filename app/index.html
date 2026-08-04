@@ -524,7 +524,7 @@ button{color:inherit}
       <div class="badges"><div class="badge-card"><b>🌿</b><span>First Trip</span></div><div class="badge-card"><b>🚌</b><span>Transit Pro</span></div><div class="badge-card"><b>♻️</b><span>Recycler</span></div><div class="badge-card"><b>⚡</b><span>EV Friend</span></div></div>
       <div class="menu-list glass" style="border-radius:24px;padding:0 4px">
         <button class="menu-row" data-open-map><span class="micon">⌖</span><span class="mcopy"><b>Green City Map</b><small>EV, recycling, stores and transit</small></span><span>›</span></button>
-        <button class="menu-row" id="openCityDashboard"><span class="micon">▥</span><span class="mcopy"><b>Municipal Dashboard</b><small>Open city intelligence demo</small></span><span>›</span></button>
+        <button class="menu-row" id="openCityDashboard"><span class="micon">▥</span><span class="mcopy"><b>Municipal Dashboard</b><small>Open city intelligence demo</small></span><span>›</span></button><button class="menu-row" id="openMerchantDashboard"><span class="micon">◈</span><span class="mcopy"><b>Merchant Dashboard</b><small>Open partner business demo</small></span><span>›</span></button><button class="menu-row" id="openCommunityDashboard"><span class="micon">♧</span><span class="mcopy"><b>Community Dashboard</b><small>Open participation analytics</small></span><span>›</span></button>
         <button class="menu-row" id="exportImpact"><span class="micon">⇩</span><span class="mcopy"><b>Export Impact Report</b><small>Download your activity as JSON</small></span><span>›</span></button>
         <button class="menu-row" id="resetDemo"><span class="micon">↻</span><span class="mcopy"><b>Reset Demo Data</b><small>Restore the original MVP state</small></span><span>›</span></button>
       </div>
@@ -536,7 +536,7 @@ button{color:inherit}
     <div class="scroll">
       <h1 class="page-title">Abu Dhabi green network</h1><div class="page-sub">Explore mobility, rewards and infrastructure.</div>
       <div class="map-screen-controls" id="mapFilters"><button class="chip active" data-layer="all">All</button><button class="chip active" data-layer="ev">EV</button><button class="chip active" data-layer="recycle">Recycle</button><button class="chip active" data-layer="store">Stores</button><button class="chip active" data-layer="transit">Transit</button><button class="chip" data-layer="heat">Emissions</button></div>
-      <div class="map-card" style="height:450px" id="greenMap"><div class="map-grid"></div><i class="map-zone z1" data-heat></i><i class="map-zone z2" data-heat></i><i class="map-zone z3" data-heat></i><i class="map-road r1"></i><i class="map-road r2"></i><i class="map-road r3"></i><span class="layer-pin ev" data-layer-pin="ev">⚡</span><span class="layer-pin recycle" data-layer-pin="recycle">♻</span><span class="layer-pin store" data-layer-pin="store">◈</span><span class="layer-pin transit" data-layer-pin="transit">🚌</span><div class="map-label" id="greenMapLabel">12 green locations nearby</div></div>
+      <div class="map-card leaflet-real" style="height:450px" id="greenMap"></div><div class="map-label" id="greenMapLabel" style="position:relative;margin-top:-48px;margin-left:14px;z-index:500;width:max-content">12 green locations nearby</div>
       <div class="city-card glass"><h3 style="margin:0 0 6px">City opportunity</h3><p style="font-size:11px;color:var(--muted);line-height:1.5">Masdar City South has high EV demand and a 3.8 km charger gap. Suggested action: deploy two 150 kW fast chargers near the transit hub.</p><button class="secondary-btn" id="saveCityOpportunity">Save opportunity</button></div>
     </div>
   </section>
@@ -630,7 +630,7 @@ function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show'
 function fmt(n){return Number(n).toLocaleString(undefined,{maximumFractionDigits:1})}
 function openScreen(name,keepPrev=false){
   if(name==='map'||name==='admin'){if(!keepPrev) S.previousScreen=current}
-  current=name;$$('.screen').forEach(x=>x.classList.toggle('active',x.id==='screen-'+name));
+  current=name;if(name==='map')setTimeout(initGreenMap,60);$$('.screen').forEach(x=>x.classList.toggle('active',x.id==='screen-'+name));
   const navNames=['home','route','challenges','wallet','discover','community','smartcity','merchant'];
   $('#bottomNav').style.display=navNames.includes(name)?'grid':'none';
   $$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.nav===name));
@@ -691,6 +691,7 @@ function exportData(){const blob=new Blob([JSON.stringify({product:'GreenLoop MV
 
 $('#getStarted').onclick=()=>{S.started=true;save();openScreen('home')};
 $('#closeMenu').onclick=()=>$('#sideMenu').classList.remove('show');$('#sideMenu').onclick=e=>{if(e.target.id==='sideMenu')$('#sideMenu').classList.remove('show')};
+$('#openMerchantDashboard').onclick=()=>location.href='../merchant/';$('#openCommunityDashboard').onclick=()=>location.href='../community/';
 $('#mapBack').onclick=()=>openScreen(S.previousScreen||'home',true);$('#adminBack').onclick=()=>openScreen(S.previousScreen||'profile',true);$('#sideAdmin').onclick=()=>openScreen('admin');$('#openCityDashboard').onclick=()=>openScreen('admin');
 $('#findRoutesBtn').onclick=()=>{renderRoutes();const r=computedRoutes().find(x=>x.id===selectedRouteId);$('#mapLabel').textContent=r.name.replace(' Route','')+' route · '+r.time+' min';toast('3 live demo routes calculated')};
 $$('[data-priority]').forEach(b=>b.onclick=()=>{S.selectedPriority=b.dataset.priority;$$('[data-priority]').forEach(x=>x.classList.toggle('active',x===b));renderRoutes();save()});
@@ -715,8 +716,16 @@ $('#badgeInfo').onclick=()=>openModal('<h3>Badge rules</h3><p>Complete verified 
 $('#modalContent').addEventListener('click',e=>{if(e.target.id==='closeBadge')closeModal()});
 $('#exportImpact').onclick=exportData;$('#resetDemo').onclick=()=>openModal('<h3>Reset demo?</h3><p>This will remove your local progress and restore the original MVP state.</p><button class="primary-btn" id="confirmReset">Reset Data</button>');
 $('#modalContent').addEventListener('click',e=>{if(e.target.id==='confirmReset'){localStorage.removeItem(STORAGE);S=structuredClone(defaults);closeModal();renderAll();toast('Demo data reset')}});
-$('#centerMap').onclick=()=>toast('Map centered on Abu Dhabi');
-$$('#mapFilters .chip').forEach(b=>b.onclick=()=>{const layer=b.dataset.layer;if(layer==='all'){$$('#mapFilters .chip').forEach(x=>x.classList.add('active'));$$('[data-layer-pin]').forEach(x=>x.style.display='grid');$$('[data-heat]').forEach(x=>x.style.display='block')}else{b.classList.toggle('active');$$(`[data-layer-pin="${layer}"]`).forEach(x=>x.style.display=b.classList.contains('active')?'grid':'none');if(layer==='heat')$$('[data-heat]').forEach(x=>x.style.display=b.classList.contains('active')?'block':'none')}const count=$$('[data-layer-pin]').filter(x=>x.style.display!=='none').length;$('#greenMapLabel').textContent=(count*3)+' green locations nearby'});
+let greenMapInstance=null;const greenLayerGroups={};
+const greenMapData={
+ ev:[['Masdar City Fast Charge',24.4302,54.6173,'150 kW candidate'],['Yas Gateway Charger',24.4862,54.6071,'High visitor demand'],['Al Reem Mobility Hub',24.4974,54.4075,'Transit-linked charging']],
+ recycle:[['Al Reem Smart Bin',24.4949,54.4070,'QR recycling point'],['Corniche E-Waste Drop',24.4710,54.3375,'Electronics collection'],['Masdar Circular Hub',24.4311,54.6160,'Materials recovery']],
+ store:[['Root Green Café',24.4942,54.4058,'GreenLoop reward partner'],['Eco Market Yas',24.4872,54.6080,'Low-waste retail'],['Refill Station Corniche',24.4700,54.3440,'Refill and reuse partner']],
+ transit:[['Al Reem Transit Stop',24.4970,54.4090,'Bus and shared mobility'],['Masdar Transit Hub',24.4296,54.6150,'Bus and autonomous shuttle'],['Yas Mobility Centre',24.4850,54.6050,'Multimodal interchange']]
+};
+function initGreenMap(){if(greenMapInstance){setTimeout(()=>greenMapInstance.invalidateSize(),40);return}greenMapInstance=L.map('greenMap',{zoomControl:true}).setView([24.4539,54.3773],11);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(greenMapInstance);Object.entries(greenMapData).forEach(([type,items])=>{const group=L.layerGroup().addTo(greenMapInstance);greenLayerGroups[type]=group;items.forEach(([name,lat,lng,meta])=>L.circleMarker([lat,lng],{radius:8,color:type==='ev'?'#d8f99b':type==='recycle'?'#75d6a4':type==='store'?'#ffd98e':'#8dcde2',weight:3,fillOpacity:.9}).bindPopup(`<b>${name}</b><br>${meta}`).addTo(group))});L.circle([24.4539,54.3773],{radius:6200,color:'#ffbd73',fillColor:'#ffbd73',fillOpacity:.07,weight:1}).addTo(greenMapInstance)}
+$('#centerMap').onclick=()=>{initGreenMap();greenMapInstance.setView([24.4539,54.3773],11);toast('Map centered on Abu Dhabi')};
+$$('#mapFilters .chip').forEach(b=>b.onclick=()=>{initGreenMap();const layer=b.dataset.layer;if(layer==='all'){Object.values(greenLayerGroups).forEach(g=>{if(!greenMapInstance.hasLayer(g))g.addTo(greenMapInstance)});$$('#mapFilters .chip').forEach(x=>x.classList.add('active'))}else if(layer==='heat'){b.classList.toggle('active');toast('Emissions opportunity overlay '+(b.classList.contains('active')?'enabled':'disabled'))}else{b.classList.toggle('active');const g=greenLayerGroups[layer];if(b.classList.contains('active'))g.addTo(greenMapInstance);else greenMapInstance.removeLayer(g)}const visible=Object.values(greenLayerGroups).filter(g=>greenMapInstance.hasLayer(g)).length;$('#greenMapLabel').textContent=(visible*3)+' green locations nearby'});
 $('#saveCityOpportunity').onclick=()=>{S.savedOpportunity=true;save();toast('EV opportunity saved to city workspace')};
 $('#adminRefresh').onclick=()=>{$('#adminTrips').textContent=(12.8+Math.random()*.3).toFixed(1)+'K';$('#adminCarbon').textContent=(18.6+Math.random()*.5).toFixed(1)+'t';toast('Municipal dashboard refreshed')};
 $('#heatRandomize').onclick=()=>{$$('.heat-cell').forEach(x=>x.style.setProperty('--heat',(Math.random()*.8+.08).toFixed(2)));toast('Heatmap updated')};
