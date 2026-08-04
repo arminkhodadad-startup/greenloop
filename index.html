@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071710">
+  <title>GreenLoop — Smart City & Citizen Rewards OS</title>
+  <meta name="description" content="GreenLoop connects low-carbon mobility, verified citizen rewards, green commerce, community participation and municipal intelligence in one pilot-ready platform.">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#06130d;--bg2:#0a2017;--panel:#0e2a1e;--panel2:#143b2b;
+      --lime:#d8f99b;--mint:#75d6a4;--teal:#43c7a0;--text:#f7faf6;
+      --muted:#aab9b0;--line:rgba(230,255,220,.14);--white:#f4f7f2;--ink:#14251b;
+      --shadow:0 30px 80px rgba(0,0,0,.35)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}a{color:inherit}.wrap{width:min(1180px,calc(100% - 36px));margin:auto}.serif{font-family:'Playfair Display',serif}
+    .site-nav{position:sticky;top:0;z-index:40;background:rgba(6,19,13,.76);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)}
+    nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;text-decoration:none}.brand img{width:42px}.brand b{font:700 26px 'Playfair Display',serif}.navlinks{display:flex;align-items:center;gap:20px}.navlinks a{font-size:12px;text-decoration:none;color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:999px;border:1px solid var(--line);text-decoration:none;font-weight:700;font-size:12px;background:transparent;color:var(--text);cursor:pointer;transition:.2s}.btn:hover{transform:translateY(-2px);border-color:rgba(216,249,155,.42)}.btn.primary{background:linear-gradient(135deg,#e3fcae,#bde980);color:#183521;border:0}.btn.ghost{background:rgba(255,255,255,.04)}
+    .hero{min-height:760px;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:48px;padding:70px 0 95px;position:relative}.hero:before{content:"";position:absolute;width:540px;height:540px;border-radius:50%;background:radial-gradient(circle,rgba(87,222,158,.12),transparent 68%);left:-250px;top:60px;pointer-events:none}
+    .eyebrow{color:var(--lime);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase}.hero h1,.section h2{font-family:'Playfair Display',serif}.hero h1{font-size:clamp(54px,6vw,88px);line-height:.98;margin:17px 0 22px;letter-spacing:-2px}.hero h1 span{color:var(--lime)}.lead{font-size:17px;line-height:1.75;color:#c7d2ca;max-width:650px}.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:34px}.proof div{padding:15px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.035)}.proof b{display:block;color:var(--lime);font-size:19px}.proof span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+    .hero-stage{position:relative;min-height:550px}.desktop{position:absolute;right:0;top:10px;width:94%;height:410px;border-radius:28px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.035));border:1px solid var(--line);box-shadow:var(--shadow)}.desktop-screen{height:100%;border-radius:20px;background:#0b2319;padding:14px;display:grid;grid-template-columns:86px 1fr;gap:10px}.side{border-radius:15px;background:linear-gradient(180deg,#153b2b,#0e2a1e);position:relative}.side:before{content:"";position:absolute;left:18px;right:18px;top:22px;height:8px;border-radius:99px;background:var(--lime);box-shadow:0 36px 0 rgba(216,249,155,.24),0 72px 0 rgba(216,249,155,.16),0 108px 0 rgba(216,249,155,.13)}.dash{display:grid;grid-template-rows:62px 1fr;gap:10px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats i{border:1px solid rgba(216,249,155,.1);border-radius:14px;background:linear-gradient(145deg,rgba(216,249,155,.11),rgba(216,249,155,.035));position:relative}.stats i:before{content:"";position:absolute;left:12px;bottom:14px;width:58%;height:7px;background:rgba(216,249,155,.65);border-radius:99px;box-shadow:0 -15px 0 rgba(255,255,255,.08)}.dashboard-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.mapfake{position:relative;overflow:hidden;border:1px solid rgba(216,249,155,.1);border-radius:14px;background:radial-gradient(circle at 30% 40%,rgba(216,249,155,.26),transparent 28%),radial-gradient(circle at 72% 35%,rgba(117,214,164,.22),transparent 23%),#102e21}.mapfake:before,.mapfake:after{content:"";position:absolute;height:7px;width:120%;background:#395945;transform:rotate(-14deg);top:45%;left:-10%}.mapfake:after{transform:rotate(66deg);top:40%;left:-25%}.pin{position:absolute;width:14px;height:14px;border-radius:50% 50% 50% 0;background:var(--lime);transform:rotate(-45deg);left:44%;top:42%;box-shadow:58px 80px 0 var(--mint),-70px 75px 0 #8acff0}.chartfake{border:1px solid rgba(216,249,155,.1);border-radius:14px;background:rgba(216,249,155,.04);position:relative}.chartfake:before{content:"";display:block;height:100%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 230 240'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23d8f99b' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%23d8f99b' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M8 210 C50 170 70 185 105 132 S168 110 222 40 L222 238 L8 238 Z' fill='url(%23g)'/%3E%3Cpath d='M8 210 C50 170 70 185 105 132 S168 110 222 40' fill='none' stroke='%23d8f99b' stroke-width='5'/%3E%3C/svg%3E") center/80% no-repeat}.phone{position:absolute;left:-8px;bottom:0;width:205px;height:430px;padding:9px;border-radius:42px;background:#0c261b;border:1px solid rgba(255,255,255,.18);box-shadow:0 35px 75px rgba(0,0,0,.55);transform:rotate(-3deg)}.phone-inner{height:100%;border-radius:34px;padding:24px 14px;background:radial-gradient(circle at 75% 8%,rgba(216,249,155,.22),transparent 24%),linear-gradient(#153c2b,#091c14)}.phone-inner h3{font:700 27px 'Playfair Display';margin:28px 0 12px}.mini-card{height:88px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.07);margin:10px 0;padding:12px}.route-line{height:6px;border-radius:99px;background:linear-gradient(90deg,var(--lime),var(--mint));margin-top:18px}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini-grid span{height:54px;border-radius:15px;background:rgba(255,255,255,.06);border:1px solid var(--line)}
+    .section{padding:96px 0}.section.light{background:var(--white);color:var(--ink)}.section.soft{background:#0a2017}.section h2{font-size:clamp(40px,5vw,66px);line-height:1.04;margin:0 0 16px}.sub{max-width:760px;line-height:1.75;color:var(--muted)}.light .sub{color:#647168}
+    .demo-shell{margin-top:36px;border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.045);overflow:hidden;box-shadow:var(--shadow)}.demo-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}.demo-tabs button{border:0;background:#0d281d;color:#aebcb3;padding:18px 12px;font:700 12px 'DM Sans';cursor:pointer}.demo-tabs button.active{background:#173d2c;color:var(--lime)}.demo-browser{padding:12px;background:linear-gradient(180deg,#0d281d,#071710)}.browser-top{height:34px;border-radius:14px 14px 0 0;background:#173d2c;display:flex;align-items:center;gap:6px;padding:0 12px}.browser-top i{width:8px;height:8px;border-radius:50%;background:#7ba886}.browser-url{margin-left:10px;flex:1;height:18px;border-radius:99px;background:rgba(255,255,255,.07)}.demo-frame{width:100%;height:660px;border:0;background:#fff;border-radius:0 0 16px 16px}.demo-note{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:16px 4px 2px;color:var(--muted);font-size:11px}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}.feature{padding:26px;border-radius:24px;border:1px solid #d9e4db;background:#fff;box-shadow:0 20px 50px rgba(20,58,37,.07)}.feature-icon{width:48px;height:48px;border-radius:16px;background:#edf7ea;display:grid;place-items:center;color:#2b7e57;font-size:22px}.feature h3{font-size:17px;margin:18px 0 8px}.feature p{font-size:12px;line-height:1.6;color:#68756d;margin:0}.feature ul{padding-left:18px;color:#6a776f;font-size:11px;line-height:1.7;margin:14px 0 0}
+    .screens{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:38px}.shot{border-radius:26px;overflow:hidden;border:1px solid var(--line);background:#0f2d21;box-shadow:var(--shadow);position:relative}.shot.large{min-height:520px}.shot.small{min-height:250px}.shot iframe{width:100%;height:100%;border:0;position:absolute;inset:0;transform-origin:top left}.shot-label{position:absolute;left:14px;bottom:14px;z-index:2;padding:9px 12px;border-radius:999px;background:rgba(6,19,13,.82);backdrop-filter:blur(10px);font-size:10px;font-weight:700;color:var(--lime);border:1px solid var(--line)}.shot-stack{display:grid;grid-template-rows:1fr 1fr;gap:18px}
+    .architecture{display:grid;grid-template-columns:1fr .95fr;gap:48px;align-items:center;margin-top:38px}.arch-diagram{padding:30px;border-radius:28px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.02))}.arch-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.arch-node{padding:17px;border-radius:18px;border:1px solid var(--line);background:#102e21;text-align:center}.arch-node b{display:block;color:var(--lime);font-size:12px}.arch-node span{font-size:10px;color:var(--muted)}.arch-arrow{text-align:center;color:var(--mint);font-size:24px;padding:8px 0}.arch-core{padding:24px;border-radius:22px;background:linear-gradient(135deg,#d8f99b,#75d6a4);color:#153321;text-align:center;font-weight:800}.arch-list{display:grid;gap:12px}.arch-list div{padding:18px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.04)}.arch-list b{display:block;color:var(--lime);font-size:13px}.arch-list span{font-size:11px;color:var(--muted);line-height:1.55}
+    .customers{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}.customer{padding:24px;border-radius:24px;background:#fff;border:1px solid #d9e4db}.customer-icon{font-size:28px}.customer h3{margin:15px 0 8px;font-size:16px}.customer p{font-size:11px;line-height:1.6;color:#69766e}.customer .use{margin-top:14px;padding-top:14px;border-top:1px solid #e4ebe5;color:#27704f;font-size:10px;font-weight:700}
+    .contact{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:stretch;margin-top:38px}.contact-card{padding:30px;border-radius:28px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025))}.contact-card h3{font:700 30px 'Playfair Display';margin:0 0 12px}.contact-list{display:grid;gap:12px;margin-top:22px}.contact-item{padding:14px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid var(--line);font-size:12px}.contact-item b{color:var(--lime);display:block;font-size:10px;text-transform:uppercase;letter-spacing:.9px;margin-bottom:5px}.contact-form{display:grid;gap:12px}.contact-form input,.contact-form textarea{width:100%;border:1px solid var(--line);background:#0a2118;color:#fff;border-radius:16px;padding:14px;font:500 12px 'DM Sans';outline:none}.contact-form textarea{min-height:132px;resize:vertical}.form-note{font-size:10px;color:var(--muted);line-height:1.5}
+    .band{padding:34px 0;background:linear-gradient(90deg,#c9f18e,#80daa9);color:#153321}.band .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}.band h3{font:700 30px 'Playfair Display';margin:0}.band p{margin:7px 0 0;font-size:12px;color:#315a43}
+    footer{border-top:1px solid var(--line);padding:42px 0;color:var(--muted);font-size:11px}footer .wrap{display:flex;justify-content:space-between;gap:20px}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:20px;z-index:70}.modal.open{display:flex}.modal-card{width:min(540px,100%);background:#102d21;border:1px solid var(--line);border-radius:26px;padding:27px}.modal-card h3{font-family:'Playfair Display';font-size:29px;margin:0 0 14px}.flow{display:grid;gap:10px}.flow div{padding:13px;border-radius:15px;background:rgba(255,255,255,.05);font-size:12px;color:#d5ded8}.toast{position:fixed;right:20px;bottom:20px;background:#d8f99b;color:#173521;padding:13px 16px;border-radius:14px;font-size:12px;font-weight:700;opacity:0;transform:translateY(20px);pointer-events:none;transition:.25s;z-index:90}.toast.show{opacity:1;transform:none}
+    @media(max-width:1000px){.hero{grid-template-columns:1fr}.hero-stage{min-height:540px}.features{grid-template-columns:1fr 1fr}.architecture{grid-template-columns:1fr}.customers{grid-template-columns:1fr 1fr}.screens{grid-template-columns:1fr}.shot-stack{grid-template-columns:1fr 1fr;grid-template-rows:none}.contact{grid-template-columns:1fr}}
+    @media(max-width:720px){.navlinks a:not(.btn),.navlinks button{display:none}.hero h1{font-size:50px}.proof{grid-template-columns:1fr}.demo-tabs{grid-template-columns:1fr 1fr}.demo-frame{height:590px}.features,.customers,.shot-stack{grid-template-columns:1fr}.arch-row{grid-template-columns:1fr}.desktop{height:320px;width:100%}.phone{width:170px;height:360px}.hero-stage{min-height:430px}.band .wrap,footer .wrap{display:block}.band .btn{margin-top:18px}.contact-card{padding:22px}}
+  </style>
+</head>
+<body>
+  <header class="site-nav">
+    <nav class="wrap">
+      <a class="brand" href="#top"><img src="assets/logo.svg" alt="GreenLoop logo"><b>GreenLoop</b></a>
+      <div class="navlinks">
+        <a href="#demo">Demo</a><a href="#features">Features</a><a href="#screenshots">Screens</a><a href="#architecture">Architecture</a><a href="#customers">Customers</a><a href="#contact">Contact</a>
+        <button class="btn ghost" id="tourBtn">5-minute flow</button>
+        <a class="btn primary" href="app/">Launch MVP</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div>
+        <div class="eyebrow">Pilot-ready ClimateTech & Smart City platform</div>
+        <h1>Make sustainable actions <span>measurable, rewarding and useful.</span></h1>
+        <p class="lead">GreenLoop connects low-carbon mobility, verified citizen rewards, green merchants, community participation and municipal intelligence in one operating system designed for city pilots.</p>
+        <div class="cta">
+          <a class="btn primary" href="app/">Open Citizen App</a>
+          <a class="btn ghost" href="dashboard/">Municipal Dashboard</a>
+          <button class="btn ghost" id="heroTour">Watch the 5-minute flow</button>
+        </div>
+        <div class="proof">
+          <div><b>5 interfaces</b><span>Citizen, City, Merchant, Community, Landing</span></div>
+          <div><b>Real map layer</b><span>OpenStreetMap · Abu Dhabi scenario</span></div>
+          <div><b>Pilot-safe data</b><span>Synthetic, labelled and interactive</span></div>
+        </div>
+      </div>
+      <div class="hero-stage" aria-label="GreenLoop product mockup">
+        <div class="desktop"><div class="desktop-screen"><div class="side"></div><div class="dash"><div class="stats"><i></i><i></i><i></i></div><div class="dashboard-grid"><div class="mapfake"><span class="pin"></span></div><div class="chartfake"></div></div></div></div></div>
+        <div class="phone"><div class="phone-inner"><small style="color:var(--lime);letter-spacing:1px">GREENLOOP</small><h3>Move green.<br>Earn rewards.</h3><div class="mini-card"><small style="color:#cbd8cf">Best green route</small><div class="route-line"></div></div><div class="mini-grid"><span></span><span></span></div></div></div>
+      </div>
+    </section>
+
+    <section class="section light" id="demo">
+      <div class="wrap">
+        <div class="eyebrow" style="color:#317458">Interactive product demo</div>
+        <h2>Explore the platform without leaving the page.</h2>
+        <p class="sub">Switch between the Citizen App, Municipal Dashboard, Merchant Portal and Community Dashboard. Each module uses professional English, synthetic Abu Dhabi pilot data and working local interactions.</p>
+        <div class="demo-shell">
+          <div class="demo-tabs" role="tablist">
+            <button class="active" data-src="app/" data-name="Citizen App">Citizen App</button>
+            <button data-src="dashboard/" data-name="Municipal Dashboard">Municipal Dashboard</button>
+            <button data-src="merchant/" data-name="Merchant Portal">Merchant Portal</button>
+            <button data-src="community/" data-name="Community Dashboard">Community Dashboard</button>
+          </div>
+          <div class="demo-browser">
+            <div class="browser-top"><i></i><i></i><i></i><div class="browser-url"></div></div>
+            <iframe id="demoFrame" class="demo-frame" src="app/" title="GreenLoop interactive demo" loading="eager"></iframe>
+            <div class="demo-note"><span id="demoName">Citizen App · interactive embedded preview</span><a class="btn primary" id="openDemo" href="app/">Open full screen</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="eyebrow">Core capabilities</div>
+        <h2>One platform, four connected value loops.</h2>
+        <p class="sub">GreenLoop turns daily city behaviour into verifiable actions, rewards, merchant demand and municipal insight.</p>
+        <div class="features">
+          <article class="feature"><div class="feature-icon">↗</div><h3>Smart Mobility</h3><p>Compare fastest, greenest and balanced routes across multiple transport modes.</p><ul><li>Low-carbon route scoring</li><li>EV charger discovery</li><li>Trip verification and points</li></ul></article>
+          <article class="feature"><div class="feature-icon">◎</div><h3>Citizen Rewards</h3><p>Reward verified sustainable behaviour with configurable Green Points.</p><ul><li>Wallet and redemption</li><li>Sponsored challenges</li><li>Referral and streak systems</li></ul></article>
+          <article class="feature"><div class="feature-icon">▥</div><h3>Municipal Intelligence</h3><p>Transform participation into actionable mobility, infrastructure and neighbourhood signals.</p><ul><li>Issue reporting</li><li>EV site prioritisation</li><li>Campaign performance</li></ul></article>
+          <article class="feature"><div class="feature-icon">◈</div><h3>Green Commerce</h3><p>Enable merchants to launch offers, verify QR redemptions and sponsor local missions.</p><ul><li>Offer management</li><li>Customer conversion</li><li>Green certification</li></ul></article>
+          <article class="feature"><div class="feature-icon">♧</div><h3>Community Networks</h3><p>Connect neighbourhoods, universities, companies and residents through shared missions.</p><ul><li>Leaderboards</li><li>Academic communities</li><li>Neighbourhood campaigns</li></ul></article>
+          <article class="feature"><div class="feature-icon">✦</div><h3>AI Decision Support</h3><p>Surface investment, participation and infrastructure opportunities from pilot data.</p><ul><li>Green PropTech signals</li><li>Priority recommendations</li><li>Explainable scores</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="screenshots">
+      <div class="wrap">
+        <div class="eyebrow">Product screenshots</div>
+        <h2>Mobile engagement meets enterprise intelligence.</h2>
+        <p class="sub">These live previews use the same files deployed in the public MVP. They are not decorative mockups; they are the actual interfaces judges can open and test.</p>
+        <div class="screens">
+          <div class="shot large"><iframe src="dashboard/" title="Municipal dashboard screenshot" loading="lazy"></iframe><span class="shot-label">Municipal Intelligence Dashboard</span></div>
+          <div class="shot-stack">
+            <div class="shot small"><iframe src="app/" title="Citizen app screenshot" loading="lazy"></iframe><span class="shot-label">Citizen Mobile Experience</span></div>
+            <div class="shot small"><iframe src="merchant/" title="Merchant dashboard screenshot" loading="lazy"></iframe><span class="shot-label">Merchant & Campaign Portal</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="wrap">
+        <div class="eyebrow">Platform architecture</div>
+        <h2>Built as a modular city operating layer.</h2>
+        <p class="sub">The current GitHub Pages version is a front-end demonstration. The production architecture separates citizen experiences, partner portals, data services and AI decision support so each module can scale independently.</p>
+        <div class="architecture">
+          <div class="arch-diagram">
+            <div class="arch-row"><div class="arch-node"><b>Citizen App</b><span>Mobility · Rewards · Reports</span></div><div class="arch-node"><b>Merchant Portal</b><span>Offers · QR · Campaigns</span></div><div class="arch-node"><b>City Dashboard</b><span>Maps · KPIs · Planning</span></div></div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-core">GreenLoop API & Rules Engine</div>
+            <div class="arch-arrow">↓</div>
+            <div class="arch-row"><div class="arch-node"><b>Mobility Data</b><span>Routes · Transit · EV</span></div><div class="arch-node"><b>Rewards Ledger</b><span>Points · Wallet · Fraud</span></div><div class="arch-node"><b>Urban Intelligence</b><span>GIS · AI · Reports</span></div></div>
+          </div>
+          <div class="arch-list">
+            <div><b>Experience layer</b><span>Responsive citizen mobile product plus dedicated dashboards for municipalities, merchants and community operators.</span></div>
+            <div><b>Service layer</b><span>Authentication, activity verification, points rules, challenge management, reporting and partner workflows.</span></div>
+            <div><b>Data layer</b><span>PostgreSQL/PostGIS, mobility feeds, EV infrastructure, merchant locations and anonymised participation metrics.</span></div>
+            <div><b>AI layer</b><span>Route explanations, investment scoring, campaign recommendations, anomaly detection and natural-language reporting.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section light" id="customers">
+      <div class="wrap">
+        <div class="eyebrow" style="color:#317458">Target customers</div>
+        <h2>Designed for the full urban ecosystem.</h2>
+        <p class="sub">GreenLoop combines B2G, B2B and citizen engagement instead of depending on a single buyer or a single source of revenue.</p>
+        <div class="customers">
+          <article class="customer"><div class="customer-icon">🏙️</div><h3>Municipalities</h3><p>Mobility intelligence, citizen campaigns, infrastructure planning, issue reporting and measurable climate participation.</p><div class="use">Annual SaaS + pilot contracts</div></article>
+          <article class="customer"><div class="customer-icon">🏢</div><h3>Companies & Campuses</h3><p>Employee commute programmes, ESG reporting, corporate challenges and low-carbon participation analytics.</p><div class="use">Per-employee or enterprise subscription</div></article>
+          <article class="customer"><div class="customer-icon">🛍️</div><h3>Merchants & Operators</h3><p>Reward campaigns, QR redemption, customer acquisition, EV promotions and green business certification.</p><div class="use">Campaign fees + marketplace commission</div></article>
+          <article class="customer"><div class="customer-icon">🏘️</div><h3>Developers & Communities</h3><p>Neighbourhood engagement, PropTech signals, sustainable amenity planning and resident reward programmes.</p><div class="use">White-label community platform</div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="wrap">
+        <div class="eyebrow">Contact & pilot discussion</div>
+        <h2>Ready to discuss an Abu Dhabi pilot.</h2>
+        <p class="sub">The public demo is designed for evaluation. Production deployment would add secure authentication, live mobility feeds, partner integrations, cloud databases and city-specific compliance.</p>
+        <div class="contact">
+          <div class="contact-card">
+            <h3>Founder contact</h3>
+            <p style="color:var(--muted);line-height:1.7">GreenLoop is currently founder-led and prepared for accelerator review, pilot scoping and technical partnership discussions.</p>
+            <div class="contact-list">
+              <div class="contact-item"><b>Founder</b>Armin Khodadad</div>
+              <div class="contact-item"><b>Project repository</b><a href="https://github.com/arminkhodadad-startup/greenloop" target="_blank" rel="noreferrer">github.com/arminkhodadad-startup/greenloop</a></div>
+              <div class="contact-item"><b>Live product</b><a href="https://arminkhodadad-startup.github.io/greenloop/" target="_blank" rel="noreferrer">arminkhodadad-startup.github.io/greenloop/</a></div>
+              <div class="contact-item"><b>Pilot market</b>Abu Dhabi, United Arab Emirates</div>
+            </div>
+          </div>
+          <div class="contact-card">
+            <h3>Send a project enquiry</h3>
+            <form class="contact-form" id="contactForm">
+              <input id="contactName" required placeholder="Your name">
+              <input id="contactOrg" placeholder="Organisation">
+              <input id="contactEmail" type="email" required placeholder="Email address">
+              <textarea id="contactMessage" required placeholder="Tell us about the pilot, partnership or investment discussion."></textarea>
+              <button class="btn primary" type="submit">Prepare enquiry</button>
+              <div class="form-note">This static demo prepares the message and copies it to your clipboard. The founder's preferred email can be added after the domain account is created.</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap"><div><h3>Start the five-minute GreenLoop review.</h3><p>Citizen journey → verified rewards → merchant activity → municipal intelligence.</p></div><a class="btn" style="background:#153521;color:#fff;border:0" href="app/">Launch Citizen MVP</a></div>
+    </section>
+  </main>
+
+  <footer><div class="wrap"><span>GreenLoop · AI-Powered Smart City & Citizen Rewards Platform</span><span>Founder: Armin Khodadad · Synthetic Abu Dhabi pilot data</span></div></footer>
+
+  <div class="modal" id="tourModal"><div class="modal-card"><h3>Five-minute demo flow</h3><div class="flow"><div>1. Open the Citizen App and calculate a low-carbon route.</div><div>2. Complete the simulated trip and receive verified Green Points.</div><div>3. Redeem a reward or join a sponsored challenge.</div><div>4. Open the Municipal Dashboard and review map-based city signals.</div><div>5. Open Merchant and Community dashboards to show the business ecosystem.</div></div><a class="btn primary" style="width:100%;margin-top:18px" href="app/">Start exploring</a><button class="btn ghost" style="width:100%;margin-top:10px" id="closeTour">Close</button></div></div>
+  <div class="toast" id="toast">Enquiry copied to clipboard.</div>
+
+  <script>
+    const tour=document.getElementById('tourModal');
+    const openTour=()=>tour.classList.add('open');
+    document.getElementById('tourBtn').onclick=openTour;
+    document.getElementById('heroTour').onclick=openTour;
+    document.getElementById('closeTour').onclick=()=>tour.classList.remove('open');
+    tour.onclick=e=>{if(e.target===tour)tour.classList.remove('open')};
+
+    const frame=document.getElementById('demoFrame');
+    const openDemo=document.getElementById('openDemo');
+    const demoName=document.getElementById('demoName');
+    document.querySelectorAll('.demo-tabs button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.demo-tabs button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        frame.src=btn.dataset.src;
+        openDemo.href=btn.dataset.src;
+        demoName.textContent=btn.dataset.name+' · interactive embedded preview';
+      });
+    });
+
+    const toast=document.getElementById('toast');
+    const showToast=msg=>{toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2600)};
+    document.getElementById('contactForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const message=`GreenLoop project enquiry\n\nName: ${document.getElementById('contactName').value}\nOrganisation: ${document.getElementById('contactOrg').value}\nEmail: ${document.getElementById('contactEmail').value}\n\nMessage:\n${document.getElementById('contactMessage').value}`;
+      try{await navigator.clipboard.writeText(message);showToast('Enquiry copied to clipboard.');}
+      catch{showToast('Copy unavailable. Select and copy the message manually.');}
+    });
+  </script>
+</body>
+</html>
