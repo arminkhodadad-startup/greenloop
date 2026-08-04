@@ -5,8 +5,8 @@ GreenLoop is an AI-powered smart city and citizen rewards platform.
 ## Included
 
 - `index.html` — startup landing page
-- `app/index.html` — citizen mobile MVP
-- `dashboard/index.html` — responsive municipal desktop MVP
+- `app.html` — citizen mobile MVP
+- `dashboard.html` — responsive municipal desktop MVP
 - `assets/` — logo and favicon
 
 ## Publish on GitHub Pages
